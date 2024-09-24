@@ -1,7 +1,7 @@
 # Proyectofinal-Front
 
 <p align="center">
-  <a href="https://nextjs.org/" target="blank"><img src="https://nextjs.org/static/favicon/favicon-32x32.png" width="120" alt="Next.js Logo" /></a>
+  <a href="https://nextjs.org/" target="blank"><img src="https://w7.pngwing.com/pngs/643/143/png-transparent-nextjs-hd-logo-thumbnail.png" width="120" alt="Next.js Logo" /></a>
 </p>
 
 [circleci-image]: https://img.shields.io/circleci/build/github/vercel/next.js/master
