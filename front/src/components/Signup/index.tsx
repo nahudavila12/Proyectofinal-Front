@@ -17,11 +17,12 @@ export default function SignupForm() {
   const {signUp} = useContext(UserContext)
 
   const [signupValues, setSignupValues] = useState ({
+    user_name:"",
     email: "",
     password: "",
     confirmPassword:"",
-    first_name: "",
-    last_name: "",
+    firstName: "",
+    lastName: "",
     birthday: "",
     phone: "",
     address: "",
@@ -52,7 +53,9 @@ export default function SignupForm() {
     const formattedBirthday = new Date(signupValues.birthday).toISOString().split('T')[0]; // 'YYYY-MM-DD'
   
     const user = {
-      name: `${signupValues.first_name} ${signupValues.last_name}`,
+      firstName: signupValues.firstName,
+      lastName: signupValues.lastName,
+      user_name: signupValues.user_name,
       email: signupValues.email,
       birthday:  formattedBirthday,
       password: signupValues.password,
@@ -151,8 +154,8 @@ export default function SignupForm() {
               <div className='relative z-0 w-full mb-5 group'>
               <input 
                   type='text'
-                  name='first_name'
-                  id='first_name' 
+                  name='firstName'
+                  id='firstName' 
                   className='block py-2.5 px-0 w-full tex-sm text-gray-900 bg-transparent border-0
                   border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0
                   focus:border-third-color peer'
@@ -175,8 +178,8 @@ export default function SignupForm() {
               <div className='relative z-0 w-full mb-5 group'>
               <input 
                   type='text'
-                  name='last_name'
-                  id='last_name' 
+                  name='lastName'
+                  id='lastName' 
                   className='block py-2.5 px-0 w-full tex-sm text-gray-900 bg-transparent border-0
                   border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0
                   focus:border-third-color peer'
@@ -196,6 +199,29 @@ export default function SignupForm() {
                 )}     
               </div>
           </div>
+          <div className='relative z-0 w-full mb-5 group'>
+              <input 
+                  type='text'
+                  name='user_name'
+                  id='user_name' 
+                  className='block py-2.5 px-0 w-full tex-sm text-gray-900 bg-transparent border-0
+                  border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0
+                  focus:border-third-color peer'
+                  placeholder=' '
+                  onChange={handleChange}
+                  required
+                  />
+              <label className='peer-focus:font-medium absolute text-sm text-gray-500 
+                                duration-300 transform -translate-y-6 scale-75 top-5 -z-10
+                                origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4
+                                rtl:peer-focus:left-auto peer-focus:text-third-color peer-placeholder-shown:scale-100
+                                peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:translate-y-6'>
+                      Nombre de usuario
+              </label>
+              {errors.first_name && (
+                <span className='text-red-500 text-xs flex justify-end'>{errors.first_name}</span>
+                )}     
+              </div>
           <div className='relative z-0 w-full mb-5 group'>
          <input 
             type='date'

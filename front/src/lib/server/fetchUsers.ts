@@ -24,19 +24,23 @@ export const postSignup = async (user: IRegisterUser) => {
 }
 
 export const postSignin = async (credentials: ILogin) => {
+  console.log("Credenciales enviadas en el login:", credentials); // Verificar datos enviados
+
   const response = await fetch("http://localhost:5000/auth/signin", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(credentials),
+    body: JSON.stringify(credentials), // Verifica si las credenciales están bien formateadas
   });
 
   if (!response.ok) {
     const errorData = await response.json();
+    console.error("Error en login:", errorData); // Verifica el mensaje de error detallado
     throw new Error(errorData.message || "Failed to sign in");
   }
 
   const data = await response.json();
+  console.log("Respuesta del servidor en login:", data); // Verificar la respuesta del backend
   return data;
-}
+};
