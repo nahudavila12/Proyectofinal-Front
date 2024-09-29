@@ -5,8 +5,10 @@ export enum IRole {
 }
 
 interface IUser {
-  uuid: number;
-  name: string;
+  uuid: string;
+  firstName: string;
+  lastName: string,
+  user_name: string,
   birthday: string;
   email: string;
   address: string;
@@ -44,7 +46,7 @@ interface IUserContextType {
   logOut: () => void,
 }
 
-enum PropertyType {
+export enum PropertyType {
   HOTEL = 'hotel',
   CABANA = 'cabaña',
   DEPARTAMENTO = 'departamento',
@@ -78,7 +80,7 @@ interface IOwner {
 
 }
 
-enum IRoomState {
+export enum IRoomState {
   Avaiable = 'avaiable',
   Reserved = 'reserved',
   Occupied = 'occupied',
@@ -89,7 +91,7 @@ enum IRoomState {
 interface IRoom {
   uuid: string;
   room_number: number;
-  category: IRoomCategory;
+  category: ICategories;
   capacity: number;
   price_per_day: number;
   disponibility: IRoomState;
@@ -106,7 +108,7 @@ interface IRoomService {
     room: IRoom;
 }
 
-enum ICategories{
+export enum ICategories{
   STANDARD = 'standard',
   DELUXE = 'deluxe',
   SUITE = 'suite'
@@ -199,7 +201,7 @@ interface ILogin {
 }
 
 interface IRegisterUser {
-  name: string;
+  user_name: string
   email: string;
   birthday: string;
   password: string;
@@ -248,12 +250,9 @@ export type {
     IOwner,
     IRoom,
     IRoomCategory,
-    ICategories,
     IProperty,
     IPropertyImg,
-    PropertyType,
     IReservation,
-    IRoomState,
     IProfile,
     IOrderDetail,
   }
