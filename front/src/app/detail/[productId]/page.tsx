@@ -1,8 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
-import { fetchPropertiesById } from '@/lib/server/fetchProducts';
+
 import PropertyDetail from '@/components/Property-detail';
 import { IProperty } from '@/interfaces/Interfaces';
+import { fetchPropertiesById } from '@/lib/server/fetchProperties';
 
 interface PropertyDetailPageProps {
   params: {

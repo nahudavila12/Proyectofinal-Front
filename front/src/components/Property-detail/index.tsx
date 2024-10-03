@@ -251,12 +251,12 @@
 //   )
 // }
 
-
+"use client";
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useParams } from 'next/navigation'
-import { fetchPropertiesById } from '@/lib/server/fetchProducts'
+
 
 
 
@@ -264,6 +264,7 @@ import { IOrderDetail, IReservation, IRoom } from '@/interfaces/Interfaces'
 import ReservationForm from '../Reservations'
 import OrderForm from '../orders'
 import { PayPalButtons } from '@paypal/react-paypal-js'
+import { fetchPropertiesById } from '@/lib/server/fetchProperties';
 
 interface IProperty {
   uuid: string;

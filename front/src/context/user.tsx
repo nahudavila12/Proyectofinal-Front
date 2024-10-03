@@ -28,14 +28,26 @@ export const UserNormalProvider = ({children}: {children: React.ReactNode}) => {
     const signIn = async (credentials: ILogin) => {
         try {
             const data = await postSignin(credentials);
+            
+            // Verificar la estructura de `data`
+            // console.log("Data recibida del servidor:", data);
+            // console.log("Token generado (comprobación directa):", data?.generateAccessToken);
     
-            if (!data.token) {
-                throw new Error("Invalid credentials");
+            // Descomponer la respuesta para mejor comprensión
+            const { generateAccessToken, generateRefreshToken } = data;
+    
+       
+    
+            // Condición actualizada para verificar la existencia de `generateAccessToken`
+            if (!generateAccessToken) { 
+                throw new Error("Access token not found");
             }
     
+            // Almacenar el token y datos en localStorage
             setUser(data);
             localStorage.setItem("user", JSON.stringify(data));
-            localStorage.setItem("token", data.token);
+            localStorage.setItem("Acces Token", generateAccessToken);
+            localStorage.setItem("Refresh Token",generateRefreshToken);
             setIsLogged(true);
             return true;
         } catch (error) {
@@ -76,14 +88,14 @@ export const UserNormalProvider = ({children}: {children: React.ReactNode}) => {
 
     const logOut = () => {
             localStorage.removeItem("user");
-            localStorage.removeItem("token");
-            localStorage.removeItem("orderTotals");
+            localStorage.removeItem("Acces Token"); // Asegúrate de eliminar el token correcto
+            localStorage.removeItem("Refresh Token");
             setUser(null);
             setIsLogged(false);
     };
 
      useEffect(() => {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("Acces Token");
         if (token) {
             setIsLogged(true);
         } else {

@@ -64,14 +64,10 @@ export default function SignupForm() {
       address: signupValues.address,
       country:signupValues.country,
     }
-    console.log('Datos del usuario antes del registro:', user);
+    
     const success = await signUp(user);
-    console.log('Respuesta del backend al registrar:', success);
     if (success) router.push("/auth-signin");
     if (!success) alert("Invalid user")
-    
-    
-      
   };
 
   

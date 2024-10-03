@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link'
 import React, { useContext } from 'react'
 import { useState } from 'react';
-import ProfileClient from '../Auth0Google/Profile';
+
 
 export default function NavbarComponent() {
   const { isDropdownOpen, toggleDropdown, closeDropdown } = useContext(NavbarContext);
@@ -21,14 +21,13 @@ export default function NavbarComponent() {
       logOut();
       closeDropdown();
   }
-
-  
+  // const storedUser = localStorage.getItem('user');
+  // const user = storedUser ? JSON.parse(storedUser) : null;
  
   
   return (
     <nav className={`relative top-0 left-0 w-full bg-second-color/90 transition-transform duration-300 ease-in-out z-50`}>
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <ProfileClient />
         <div>
           <Link href="/" className="flex flex-col items-center space-y-2 rtl:space-y-reverse playfair-display-regular" onClick={closeDropdown}>
             <h1 className="self-center text-white text-4xl">
@@ -72,12 +71,22 @@ export default function NavbarComponent() {
           <ul className="flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-whit">
             <li>
               <Link
-                href="/home"
+                href="/"
                 className="nav-link block py-2 px-3 md:p-0 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-third-color"
                 aria-current="page"
                 onClick={closeDropdown}
               >
                 Inicio
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/home"
+                className="nav-link block py-2 px-3 md:p-0 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-third-color"
+                aria-current="page"
+                onClick={closeDropdown}
+              >
+                Alojamientos
               </Link>
             </li>
             <li>
@@ -90,16 +99,7 @@ export default function NavbarComponent() {
                 Admin Dashboard
               </Link>
             </li>
-            <li>
-              <Link
-                href="/property-form"
-                className="nav-link block py-2 px-3 md:p-0 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-third-color"
-                aria-current="page"
-                onClick={closeDropdown}
-              >
-                Agregar Alojamientos
-              </Link>
-            </li>
+           
             <li>
               <Link
                 href="/about"
