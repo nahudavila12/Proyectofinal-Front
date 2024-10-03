@@ -20,13 +20,12 @@ export default function ProfileClient() {
           <Image 
             src={userPicture} 
             alt={userName} // Asegúrate de que userName sea un string válido
-            width={50} // Ajusta el ancho según lo necesites
-            height={50}
+            width={30} // Ajusta el ancho según lo necesites
+            height={30}
             className='rounded-3xl' // Ajusta la altura según lo necesites
           />
         )}
         <h4>{userName}</h4>
-        <p>{user?.email}</p>
       </div>
     )
   );

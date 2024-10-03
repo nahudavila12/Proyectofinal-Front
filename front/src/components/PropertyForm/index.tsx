@@ -4,22 +4,23 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 
 export enum PropertyType {
-  HOTEL = 'hotel',
-  CABANA = 'cabaña',
-  DEPARTAMENTO = 'departamento',
+  HOTEL = 'Hotel',
+  CABANA = 'Cabaña',
+  DEPARTAMENTO = 'Departamento',
 }
 
 export enum ICategories {
-  STANDARD = 'standard',
-  DELUXE = 'deluxe',
-  SUITE = 'suite'
+  STANDARD = 'Estandar',
+  DELUXE = 'Deluxe',
+  SUITE = 'Suite'
 }
 
+
 export enum IRoomState {
-  Avaiable = 'avaiable',
-  Reserved = 'reserved',
-  Occupied = 'occupied',
-  Maintenance = 'maintenance',
+  Avaiable = 'Disponible',
+  Reserved = 'Reservado',
+  Occupied = 'Ocupado',
+  Maintenance = 'Mantenimiento',
 }
 
 export interface IRoom {
@@ -38,10 +39,9 @@ export interface IProperty {
   name: string;
   location: string;
   propertyType: PropertyType;
-  rate: number;
-  isActive: boolean;
-  img: { uuid: string; img: string }[];
-  room: IRoom[];
+  owner: string;
+  propImg: { uuid: string; img: string }[];
+  rooms: IRoom[];
 }
 
 interface AccommodationFormProps {
@@ -56,10 +56,9 @@ export default function AccommodationForm({ onSubmit, initialData, onCancel }: A
     name: '',
     location: '',
     propertyType: PropertyType.HOTEL,
-    rate: 0,
-    isActive: true,
-    img: [],
-    room: []
+    owner: '',
+    propImg: [],
+    rooms: []
   })
 
   const [currentRoom, setCurrentRoom] = useState<IRoom>({
@@ -90,7 +89,7 @@ export default function AccommodationForm({ onSubmit, initialData, onCancel }: A
         uuid: Date.now().toString(),
         img: URL.createObjectURL(e.target.files[0])
       }
-      setProperty(prev => ({ ...prev, img: [...prev.img, newImage] }))
+      setProperty(prev => ({ ...prev, img: [...prev.propImg, newImage] }))
     }
   }
 
@@ -126,7 +125,7 @@ export default function AccommodationForm({ onSubmit, initialData, onCancel }: A
   const handleAddRoom = () => {
     setProperty(prev => ({
       ...prev,
-      room: [...prev.room, { ...currentRoom, uuid: Date.now().toString() }]
+      room: [...prev.rooms, { ...currentRoom, uuid: Date.now().toString() }]
     }))
     setCurrentRoom({
       uuid: '',
@@ -143,14 +142,56 @@ export default function AccommodationForm({ onSubmit, initialData, onCancel }: A
   const handleDeleteRoom = (uuid: string) => {
     setProperty(prev => ({
       ...prev,
-      room: prev.room.filter(room => room.uuid !== uuid)
+      room: prev.rooms.filter(rooms => rooms.uuid !== uuid)
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    onSubmit({ ...property, uuid: property.uuid || Date.now().toString() })
-  }
+  // const handleSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault()
+  //   onSubmit({ ...property, uuid: property.uuid || Date.now().toString() })
+  // }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+  
+    const formData = new FormData();
+  
+    // Agregar propiedades al FormData
+    formData.append('name', property.name);
+    formData.append('location', property.location);
+    formData.append('owner', property.owner);
+    formData.append('propertyType', property.propertyType);
+    
+    // Agregar imágenes de la propiedad
+    property.propImg.forEach((img) => {
+      const file = img.img; // Asegúrate de que img.img sea un archivo
+      if (file) {
+        formData.append('propImg', file); // Aquí usas el nombre de tu campo en el backend
+      }
+    });
+  
+    // Agregar habitaciones al FormData
+    property.rooms.forEach((room) => {
+      formData.append('rooms[]', JSON.stringify(room)); // Agregar cada habitación como un JSON string
+    });
+  
+    // Hacer la petición al backend
+    try {
+      const response = await fetch(`http://localhost:3001/properties/addProperty/${property.uuid}`, {
+        method: 'POST',
+        body: formData,
+      });
+  
+      if (!response.ok) {
+        throw new Error('Error en la creación de la propiedad');
+      }
+  
+      const result = await response.json();
+      onSubmit(result); // Aquí puedes manejar la respuesta después de la creación exitosa
+    } catch (error) {
+      console.error('Error:', error);
+      // Maneja errores según sea necesario
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md space-y-8">
@@ -166,7 +207,7 @@ export default function AccommodationForm({ onSubmit, initialData, onCancel }: A
               value={property.name}
               onChange={handlePropertyChange}
               required
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             />
           </div>
           <div>
@@ -178,7 +219,19 @@ export default function AccommodationForm({ onSubmit, initialData, onCancel }: A
               value={property.location}
               onChange={handlePropertyChange}
               required
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            />
+          </div>
+          <div>
+            <label htmlFor="location" className="block text-sm font-medium text-gray-700">Propietario</label>
+            <input
+              id="owner"
+              name="owner"
+              type="text"
+              value={property.owner}
+              onChange={handlePropertyChange}
+              required
+              className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             />
           </div>
           <div>
@@ -188,7 +241,7 @@ export default function AccommodationForm({ onSubmit, initialData, onCancel }: A
               name="propertyType"
               value={property.propertyType}
               onChange={handlePropertyChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             >
               {Object.values(PropertyType).map((type) => (
                 <option key={type} value={type}>{type}</option>
@@ -196,35 +249,9 @@ export default function AccommodationForm({ onSubmit, initialData, onCancel }: A
             </select>
           </div>
           <div>
-            <label htmlFor="rate" className="block text-sm font-medium text-gray-700">Calificación</label>
+            <label htmlFor="propImg" className="block text-sm font-medium text-gray-700">Imágenes de la Propiedad</label>
             <input
-              id="rate"
-              name="rate"
-              type="number"
-              min="0"
-              max="5"
-              step="0.1"
-              value={property.rate}
-              onChange={handlePropertyChange}
-              required
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            />
-          </div>
-          <div className="flex items-center space-x-2">
-            <input
-              id="isActive"
-              name="isActive"
-              type="checkbox"
-              checked={property.isActive}
-              onChange={(e) => setProperty(prev => ({ ...prev, isActive: e.target.checked }))}
-              className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
-            />
-            <label htmlFor="isActive" className="text-sm font-medium text-gray-700">Activo</label>
-          </div>
-          <div>
-            <label htmlFor="propertyImage" className="block text-sm font-medium text-gray-700">Imágenes de la Propiedad</label>
-            <input
-              id="propertyImage"
+              id="propImg"
               type="file"
               onChange={handlePropertyImageAdd}
               className="mt-1 block w-full text-sm text-gray-500
@@ -235,7 +262,7 @@ export default function AccommodationForm({ onSubmit, initialData, onCancel }: A
                 hover:file:bg-indigo-100"
             />
             <div className="flex flex-wrap gap-2 mt-2">
-              {property.img.map((img) => (
+              {property.propImg.map((img) => (
                 <Image key={img.uuid} src={img.img} alt="Property" width={80} height={80} className="object-cover rounded" />
               ))}
             </div>
@@ -255,7 +282,7 @@ export default function AccommodationForm({ onSubmit, initialData, onCancel }: A
               value={currentRoom.room_number}
               onChange={handleRoomChange}
               required
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             />
           </div>
           <div>
@@ -265,7 +292,7 @@ export default function AccommodationForm({ onSubmit, initialData, onCancel }: A
               name="category"
               value={currentRoom.category}
               onChange={handleRoomChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             >
               {Object.values(ICategories).map((category) => (
                 <option key={category} value={category}>{category}</option>
@@ -281,7 +308,7 @@ export default function AccommodationForm({ onSubmit, initialData, onCancel }: A
               value={currentRoom.capacity}
               onChange={handleRoomChange}
               required
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             />
           </div>
           <div>
@@ -293,7 +320,7 @@ export default function AccommodationForm({ onSubmit, initialData, onCancel }: A
               value={currentRoom.price_per_day}
               onChange={handleRoomChange}
               required
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             />
           </div>
           <div>
@@ -303,7 +330,7 @@ export default function AccommodationForm({ onSubmit, initialData, onCancel }: A
               name="disponibility"
               value={currentRoom.disponibility}
               onChange={handleRoomChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             >
               {Object.values(IRoomState).map((state) => (
                 <option key={state} value={state}>{state}</option>
@@ -335,7 +362,7 @@ export default function AccommodationForm({ onSubmit, initialData, onCancel }: A
               id="services"
               type="text"
               onKeyPress={handleServiceAdd}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             />
             <div className="flex flex-wrap gap-2 mt-2">
               {currentRoom.roomServices?.map((service) => (
@@ -356,7 +383,7 @@ export default function AccommodationForm({ onSubmit, initialData, onCancel }: A
       <div>
         <h3 className="text-xl font-semibold mb-4">Habitaciones Agregadas</h3>
         <div className="space-y-4">
-          {property.room.map((room) => (
+          {property.rooms.map((room) => (
             <div key={room.uuid} className="border p-4 rounded-md flex justify-between items-center">
               <div>
                 <p>Número: {room.room_number}</p>
