@@ -33,18 +33,24 @@ export interface IProperty {
 }
 
 interface AccommodationFormProps {
+  ownerUUID: string
   onSubmit: (property: IProperty) => void;
   initialData?: IProperty | null;
   onCancel: () => void;
 }
 
-export default function AccommodationForm({ onSubmit, initialData, onCancel }: AccommodationFormProps) {
+export default function AccommodationForm({ 
+     onSubmit, 
+     initialData, 
+     onCancel,
+     ownerUUID,
+}: AccommodationFormProps) {
   const [property, setProperty] = useState<IProperty>({
     uuid: '',
     name: '',
     location: '',
     propertyType: PropertyType.HOTEL,
-    owner: '',
+    owner: ownerUUID,
     propImg: [],
     rooms: []
   })
@@ -161,7 +167,7 @@ export default function AccommodationForm({ onSubmit, initialData, onCancel }: A
   
     // Hacer la petición al backend
     try {
-      const response = await fetch(`http://localhost:3001/properties/addProperty/${property.uuid}`, {
+      const response = await fetch(`http://localhost:3001/properties/addProperty/${property.owner}`, {
         method: 'POST',
         body: formData,
       });
