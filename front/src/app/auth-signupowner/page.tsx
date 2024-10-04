@@ -1,7 +1,7 @@
 import SignupFormOwner from '@/components/SignupOwner';
 import React from 'react'
 
-export default function AuthSignUp() {
+export default function AuthSignUpOwner() {
   return (
     <div className='flex flex-col md:flex-row md:self-center 
                     min-w-full md:items-center md:justify-evenly'>
