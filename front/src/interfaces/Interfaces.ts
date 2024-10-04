@@ -40,7 +40,8 @@ interface IUserContextType {
   isLogged: boolean,
   setIsLogged: (isLogged: boolean) => void,
   signIn: (credentials: ILogin) => Promise<boolean>,
-  signUp: (user: Omit<IUser, "uuid">) => Promise<boolean>,
+  signUp: (user: Omit<IUser, "uuid">) => Promise<{ uuid: string } | false>;
+  signUpOwner: (uuid: string, ownerData: IRegisterOwner) => Promise<boolean>,
   // getOrders: () => void,
   // orders: IOrderResponse[] | [],
   logOut: () => void,
@@ -78,6 +79,13 @@ interface IOwner {
   user: IUser;
   property: IProperty[];
 
+}
+
+interface IRegisterOwner {
+  bussines_name: string;
+  bussinesId: string;
+  email: string,
+  phone: string
 }
 
 export enum IRoomState {
@@ -255,4 +263,5 @@ export type {
     IReservation,
     IProfile,
     IOrderDetail,
+    IRegisterOwner,
   }

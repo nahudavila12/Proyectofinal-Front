@@ -2,26 +2,14 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-
-export enum PropertyType {
-  HOTEL = 'Hotel',
-  CABANA = 'Cabaña',
-  DEPARTAMENTO = 'Departamento',
-}
-
-export enum ICategories {
-  STANDARD = 'Estandar',
-  DELUXE = 'Deluxe',
-  SUITE = 'Suite'
-}
+import { ICategories, IRoomState, PropertyType } from '@/interfaces/Interfaces';
 
 
-export enum IRoomState {
-  Avaiable = 'Disponible',
-  Reserved = 'Reservado',
-  Occupied = 'Ocupado',
-  Maintenance = 'Mantenimiento',
-}
+
+
+
+
+
 
 export interface IRoom {
   uuid: string;
@@ -146,10 +134,7 @@ export default function AccommodationForm({ onSubmit, initialData, onCancel }: A
     }))
   }
 
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault()
-  //   onSubmit({ ...property, uuid: property.uuid || Date.now().toString() })
-  // }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
   
