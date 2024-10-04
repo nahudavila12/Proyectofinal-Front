@@ -1,9 +1,9 @@
 "use client";
 
 
-import { ILogin, IUser, IUserContextType, IUserResponse } from "@/interfaces/Interfaces";
+import { ILogin, IRegisterOwner, IUser, IUserContextType, IUserResponse } from "@/interfaces/Interfaces";
 // import { getUsersOrders } from "@/lib/server/fetchOrders";
-import { postSignin, postSignup } from "@/lib/server/fetchUsers";
+import { postSignin, postSignup, postSignupOwner } from "@/lib/server/fetchUsers";
 
 import { createContext, useEffect, useState } from "react";
 
@@ -15,6 +15,7 @@ export const UserContext = createContext<IUserContextType> ({
     setIsLogged: () => {},
     signIn: async () => false,
     signUp: async () => false,
+    signUpOwner: async () => false,
     // getOrders: async () => {},
     // orders: [],
     logOut: () => {},
@@ -61,7 +62,7 @@ export const UserNormalProvider = ({children}: {children: React.ReactNode}) => {
             const data = await postSignup(user);
             
             if (data.uuid) {
-                return true;
+                return { uuid: data.uuid };
             }
             return false;
         } catch (error) {
@@ -70,7 +71,20 @@ export const UserNormalProvider = ({children}: {children: React.ReactNode}) => {
         }
     };
     
-
+    const signUpOwner = async (uuid: string, ownerData: IRegisterOwner ) => {
+        try {
+            const data = await postSignupOwner(uuid, ownerData);
+            
+            if (data.uuid) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error(error);
+            return false;
+        }
+      };
+    
 
 
     // const getOrders = useCallback(async () => {
@@ -121,6 +135,7 @@ export const UserNormalProvider = ({children}: {children: React.ReactNode}) => {
                     setIsLogged,
                     signIn,
                     signUp,
+                    signUpOwner,
                     // getOrders,
                     // orders,
                     logOut,

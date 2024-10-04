@@ -28,6 +28,7 @@ export default function Footer() {
         <li><Link href="/about" className="nav-link me-4 md:me-6" onClick={closeDropdown}>Sobre Nosotros</Link></li>
         <li><Link href="/contact" className="nav-link me-4 md:me-6" onClick={closeDropdown}>Términos y condiciones</Link></li>
         <li><Link href="/privacy-policy" className="nav-link me-4 md:me-6" onClick={closeDropdown}>Políticas de privacidad</Link></li>
+        <li><Link href="/auth-signupowner" className="nav-link me-4 md:me-6" onClick={closeDropdown}>Propietarios</Link></li>
         <li><Link href="/contact" className="nav-link" onClick={closeDropdown}>Contacto</Link></li>
       </ul>
     </div>

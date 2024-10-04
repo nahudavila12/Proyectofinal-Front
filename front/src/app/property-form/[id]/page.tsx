@@ -2,17 +2,17 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import PropertyForm, { Property } from '@/components/PropertyForm'
+import PropertyForm, { IProperty } from '@/components/PropertyForm'
 
 
 export default function EditPropertyPage({ params }: { params: { id: string } }) {
-  const [property, setProperty] = useState<Property | null>(null)
+  const [property, setProperty] = useState<IProperty | null>(null)
   const router = useRouter()
 
   useEffect(() => {
     const fetchProperty = () => {
       const storedProperties = JSON.parse(localStorage.getItem('properties') || '[]')
-      const foundProperty = storedProperties.find((p: Property) => p.id === Number(params.id))
+      const foundProperty = storedProperties.find((p: IProperty) => p.uuid === (params.id))
       
       if (foundProperty) {
         setProperty(foundProperty)
@@ -20,21 +20,23 @@ export default function EditPropertyPage({ params }: { params: { id: string } })
         router.push('/property-own-list')
       }
     }
-
+  
     if (params.id) {
       fetchProperty()
     }
   }, [params.id, router])
 
-  const handleUpdate = (updatedProperty: Property) => {
+  const handleUpdate = (updatedProperty: IProperty) => {
     const storedProperties = JSON.parse(localStorage.getItem('properties') || '[]')
-    const updatedProperties = storedProperties.map((p: Property) =>
-      p.id === updatedProperty.id ? updatedProperty : p
+    const updatedProperties = storedProperties.map((p: IProperty) =>
+      p.uuid === updatedProperty.uuid ? updatedProperty : p
     )
     localStorage.setItem('properties', JSON.stringify(updatedProperties))
     router.push('/property-own-list')
   }
-
+  const handleCancel = () => {
+    router.push('/property-own-list')
+  }
   if (!property) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -46,7 +48,7 @@ export default function EditPropertyPage({ params }: { params: { id: string } })
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Editar Alojamiento</h1>
-      <PropertyForm initialData={property} onSubmit={handleUpdate} />
+      <PropertyForm initialData={property} onSubmit={handleUpdate} onCancel={handleCancel}/>
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { ILogin } from "../../interfaces/Interfaces";
+import { ILogin, IRegisterOwner } from "../../interfaces/Interfaces";
 import { IRegisterUser } from "../../interfaces/Interfaces";
 
 
@@ -43,3 +43,29 @@ export const postSignin = async (credentials: ILogin) => {
   // console.log("Respuesta del servidor en login:", data); // Verificar la respuesta del backend
   return data;
 };
+
+
+
+export const postSignupOwner = async (uuid: string, ownerData: IRegisterOwner) => {
+  // Construye la URL usando el UUID proporcionado como parámetro
+  const url = `http://localhost:3001/owners/addOwner/${uuid}`;
+
+  // Realiza la solicitud POST para registrar al propietario con la URL dinámica
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(ownerData),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to sign up as owner");
+  }
+
+  // Devuelve la respuesta completa del servidor
+  const data = await response.json();
+  return data;
+};
+
