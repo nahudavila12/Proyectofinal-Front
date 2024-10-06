@@ -50,7 +50,7 @@ export default function AccommodationForm({
     name: '',
     location: '',
     propertyType: PropertyType.HOTEL,
-    owner: ownerUUID,
+    owner: ownerUUID || '',
     propImg: [],
     rooms: []
   })
@@ -67,10 +67,16 @@ export default function AccommodationForm({
   })
 
   useEffect(() => {
+    console.log('Propiedades iniciales:', initialData);
+    console.log('UUID de propietario pasado a PropertyForm:', ownerUUID);
+    
     if (initialData) {
-      setProperty(initialData)
+      setProperty(initialData);
+    } else {
+      // Este se activará en el primer render si no hay initialData
+      setProperty(prev => ({ ...prev, owner: ownerUUID || '' })); // Asegúrate de que el owner se establezca correctamente
     }
-  }, [initialData])
+  }, [initialData, ownerUUID]);
 
   const handlePropertyChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -143,13 +149,17 @@ export default function AccommodationForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+    
+    if (!property.name || !property.location || !property.propertyType) {
+      console.error('Campos requeridos faltantes');
+      return;
+    }
+
     const formData = new FormData();
-  
+    
     // Agregar propiedades al FormData
     formData.append('name', property.name);
     formData.append('location', property.location);
-    formData.append('owner', property.owner);
     formData.append('propertyType', property.propertyType);
     
     // Agregar imágenes de la propiedad
@@ -167,7 +177,7 @@ export default function AccommodationForm({
   
     // Hacer la petición al backend
     try {
-      const response = await fetch(`http://localhost:3001/properties/addProperty/${property.owner}`, {
+      const response = await fetch(`http://localhost:3001/properties/addProperty/${ownerUUID}`, {
         method: 'POST',
         body: formData,
       });
@@ -208,18 +218,6 @@ export default function AccommodationForm({
               name="location"
               type="text"
               value={property.location}
-              onChange={handlePropertyChange}
-              required
-              className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            />
-          </div>
-          <div>
-            <label htmlFor="location" className="block text-sm font-medium text-gray-700">Propietario</label>
-            <input
-              id="owner"
-              name="owner"
-              type="text"
-              value={property.owner}
               onChange={handlePropertyChange}
               required
               className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"

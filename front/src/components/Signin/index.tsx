@@ -52,7 +52,7 @@ export default function SigninForm() {
   
     
     return (
-      <form className='max-w-md mx-auto' onSubmit={handleSubmit}>
+      <form className='max-w-md mx-auto p-6 rounded-lg shadow-md' onSubmit={handleSubmit}>
         <div className='relative z-0 w-full mb-5 group'>
            <input 
               type='email'
@@ -105,9 +105,9 @@ export default function SigninForm() {
             type='submit'
             // disabled={Object.keys(errors).length > 0}
             disabled={Object.keys(errors).some((key) => errors[key])}
-            className='text-white bg-second-color hover:bg-third-color focus:ring-4 focus:ring-first-color font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2'
+            className='block w-full text-center text-white bg-second-color hover:bg-third-color font-medium py-2 px-4 rounded-lg transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-third-color'
         >
-          Submit
+          Iniciar sesión
         </button>
       </form>
     )

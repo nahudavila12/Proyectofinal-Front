@@ -6,6 +6,8 @@ import Image from 'next/image';
 import Link from 'next/link'
 import React, { useContext } from 'react'
 import { useState } from 'react';
+import ProfileClient from '../Auth0Google/Profile';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 
 export default function NavbarComponent() {
@@ -23,7 +25,10 @@ export default function NavbarComponent() {
   }
   // const storedUser = localStorage.getItem('user');
   // const user = storedUser ? JSON.parse(storedUser) : null;
- 
+  const { user, error, isLoading } = useUser();
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
   
   return (
     <nav className={`relative top-0 left-0 w-full bg-second-color/90 transition-transform duration-300 ease-in-out z-50`}>
@@ -85,7 +90,7 @@ export default function NavbarComponent() {
                 className="nav-link block py-2 px-3 md:p-0 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-third-color"
                 aria-current="page"
                 onClick={closeDropdown}
-              >
+              >  
                 Alojamientos
               </Link>
             </li>
@@ -123,7 +128,8 @@ export default function NavbarComponent() {
           </ul>
         </div>
         <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse relative">
-
+         <ProfileClient />
+         
         
         <button
             type="button"
@@ -177,6 +183,18 @@ export default function NavbarComponent() {
                 </Link>
               </li>
               )}
+               <div className="space-y-4">
+                {user && (
+                  <div className="text-center">
+                    <Link 
+                      href="/api/auth/logout" 
+                      className="block px-4 py-2 text-sm text-white hover:bg-third-color"
+                    >
+                      Salir
+                    </Link>
+                  </div>
+                )}
+              </div>
               
             </ul>
           </div>
