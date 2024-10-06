@@ -29,19 +29,19 @@ export const UserNormalProvider = ({children}: {children: React.ReactNode}) => {
     const signIn = async (credentials: ILogin) => {
         try {
             const data = await postSignin(credentials);
-            
-            // Verificar la estructura de `data`
-            // console.log("Data recibida del servidor:", data);
-            // console.log("Token generado (comprobación directa):", data?.generateAccessToken);
     
             // Descomponer la respuesta para mejor comprensión
-            const { generateAccessToken, generateRefreshToken } = data;
+            const { generateAccessToken, generateRefreshToken, ownerUUID } = data;
     
        
-    
+           
             // Condición actualizada para verificar la existencia de `generateAccessToken`
             if (!generateAccessToken) { 
                 throw new Error("Access token not found");
+            }
+
+            if (ownerUUID) {
+                localStorage.setItem("ownerUUID", ownerUUID);
             }
     
             // Almacenar el token y datos en localStorage
@@ -104,6 +104,7 @@ export const UserNormalProvider = ({children}: {children: React.ReactNode}) => {
             localStorage.removeItem("user");
             localStorage.removeItem("Acces Token"); // Asegúrate de eliminar el token correcto
             localStorage.removeItem("Refresh Token");
+            localStorage.removeItem("ownerUUID")
             setUser(null);
             setIsLogged(false);
     };

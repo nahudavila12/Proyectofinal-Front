@@ -262,7 +262,7 @@ import { useParams } from 'next/navigation'
 
 import { IOrderDetail, IReservation, IRoom } from '@/interfaces/Interfaces'
 import ReservationForm from '../Reservations'
-import OrderForm from '../orders'
+import OrderForm from '../Orders'
 import { PayPalButtons } from '@paypal/react-paypal-js'
 import { fetchPropertiesById } from '@/lib/server/fetchProperties';
 

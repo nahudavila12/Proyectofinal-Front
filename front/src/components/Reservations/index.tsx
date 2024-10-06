@@ -1,6 +1,6 @@
 import { IOrderDetail, IReservation, IRoom, IStateBooking, IUser } from '@/interfaces/Interfaces';
 import React, { useState } from 'react';
-import PayPalButton from '../paypal/paypal-button'; 
+import PayPalButton from '../Paypal'; 
 
 interface ReservationFormProps {
   room: IRoom;
