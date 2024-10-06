@@ -71,9 +71,9 @@ export default function PropertyOwnerList() {
             <p>Tipo: {property.propertyType}</p>
             <p>Calificación: {property.rate}</p>
             <p>Estado: {property.isActive ? 'Publicado' : 'No publicado'}</p>
-            {property.img.length > 0 && (
+            {property.propImg.length > 0 && (
               <Image
-                src={property.img[0].img}
+                src={property.propImg[0].img}
                 alt={property.name}
                 width={200}
                 height={150}

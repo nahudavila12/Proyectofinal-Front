@@ -30,10 +30,12 @@ export interface IProperty {
   owner: string;
   propImg: { uuid: string; img: string }[];
   rooms: IRoom[];
+  isActive?: boolean;
+  rate?: number; //OPCIONAL TEMPORALMENTE
 }
 
 interface AccommodationFormProps {
-  ownerUUID: string
+  ownerUUID?: string //AGREGO ? PARA EVITAR ERRORES. SOLUCION TEMPORAL
   onSubmit: (property: IProperty) => void;
   initialData?: IProperty | null;
   onCancel: () => void;
@@ -52,7 +54,7 @@ export default function AccommodationForm({
     propertyType: PropertyType.HOTEL,
     owner: ownerUUID || '',
     propImg: [],
-    rooms: []
+    rooms: [],
   })
 
   const [currentRoom, setCurrentRoom] = useState<IRoom>({
