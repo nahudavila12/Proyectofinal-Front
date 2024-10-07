@@ -1,6 +1,12 @@
 export const validateSignupField = (name: string, value: string) => {
     let error = "";
 
+    if (name === 'user_name') {
+        if (!value) {
+            error = "username is requiered"
+        }
+    }
+
     if (name === 'email') {
         if (!value) {
             error = "Email is required";
