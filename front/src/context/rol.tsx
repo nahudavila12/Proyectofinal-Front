@@ -3,21 +3,21 @@ import React, { createContext, useState, useContext, ReactNode } from 'react';
 
 
 interface AuthContextProps {
-  role: IRol | null;
-  login: (newRole: IRol) => void;
+  rol: IRol | null;
+  login: (newRol: IRol) => void;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [role, setRole] = useState<IRol | null>(null);
+  const [rol, setRol] = useState<IRol | null>(null);
 
-  const login = (newRole: IRol) => setRole(newRole);
-  const logout = () => setRole(null);
+  const login = (newRol: IRol) => setRol(newRol);
+  const logout = () => setRol(null);
 
   return (
-    <AuthContext.Provider value={{ role, login, logout }}>
+    <AuthContext.Provider value={{ rol, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

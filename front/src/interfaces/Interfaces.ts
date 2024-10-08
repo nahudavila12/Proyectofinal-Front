@@ -16,7 +16,7 @@ interface IUser {
   phone: string;
   password: string;
   isActive?: boolean;
-  role?: IRol;
+  rol?: IRol;
   profile?: IProfile;
   owner?: IOwner;
   orderdetail?: IOrderDetail;

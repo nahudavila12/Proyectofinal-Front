@@ -4,7 +4,7 @@ import { IProperty } from "@/interfaces/Interfaces";
 export async function fetchProperties() {
   
     try {
-      const response = await fetch("http://localhost:3001/properties", {
+      const response = await fetch("http://localhost:3000/properties", {
         next:{revalidate: 3600}
       })
 
@@ -19,7 +19,7 @@ export async function fetchProperties() {
   }
   
 export async function fetchPropertiesById(uuid: string): Promise<IProperty> {
-  const response = await fetch(`http://localhost:3001/properties/${uuid}`);
+  const response = await fetch(`http://localhost:3000/properties/${uuid}`);
   const product = await response.json();
   return product;
   }
@@ -46,7 +46,7 @@ export async function fetchPropertiesById(uuid: string): Promise<IProperty> {
       const products = cartItems.map((item) => item.uuid);
       const token = localStorage.getItem("token");
   
-      const response = await fetch("http://localhost:3001/properties/addProperty/:id", {
+      const response = await fetch("http://localhost:3000/properties/addProperty/:id", {
         method: "POST",
         headers: {
           Authorization: `${token}`,
