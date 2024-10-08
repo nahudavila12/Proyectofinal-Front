@@ -8,12 +8,14 @@ import React, { useContext } from 'react'
 import { useState } from 'react';
 import ProfileClient from '../Auth0Google/Profile';
 import { useUser } from '@auth0/nextjs-auth0/client';
+/*  import { IRol } from '@/interfaces/Interfaces'; */
+/* import { useAuth } from '../../context/rol';  */
 
 
 export default function NavbarComponent() {
   const { isDropdownOpen, toggleDropdown, closeDropdown } = useContext(NavbarContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+/*    const { role } = useAuth();  */
   const { isLogged, logOut } = useContext(UserContext);
   
   
@@ -101,11 +103,22 @@ export default function NavbarComponent() {
                 aria-current="page"
                 onClick={closeDropdown}
               >
-                Admin Dashboard
+                Owner Dashboard
               </Link>
             </li>
-           
-            <li>
+       
+        <li>
+          <Link
+            href="/admin-dashboard"
+            className="nav-link block py-2 px-3 md:p-0 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-third-color"
+            aria-current="page"
+            onClick={closeDropdown}
+          >
+            Admin Dashboard
+          </Link>
+        </li>
+      
+{/*             <li>
               <Link
                 href="/about"
                 className="nav-link block py-2 px-3 md:p-0 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-third-color"
@@ -114,7 +127,7 @@ export default function NavbarComponent() {
               >
                 Sobre nosotros
               </Link>
-            </li>
+            </li> */}
             <li>
               <Link
                 href="/contact"
