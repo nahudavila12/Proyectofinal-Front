@@ -184,7 +184,7 @@ const PropertyList: React.FC<PropertyListProps> = ({ currentPage, totalPages, se
                   Desde $
                   {property.rooms && property.rooms.length > 0
                     ? Math.min(...property.rooms.map((room) => room.price_per_day))
-                    : "Sin precio disponible"} {/* Manejo de caso sin precios */}
+                    : "Sin precio disponible"} 
                   /noche
                 </p>
               </div>

@@ -1,4 +1,4 @@
-export enum IRole {
+export enum IRol {
   User = 'user',
   Admin = 'admin',
   Owner = 'owner',
@@ -16,7 +16,7 @@ interface IUser {
   phone: string;
   password: string;
   isActive?: boolean;
-  role?: IRole;
+  rol?: IRol;
   profile?: IProfile;
   owner?: IOwner;
   orderdetail?: IOrderDetail;
