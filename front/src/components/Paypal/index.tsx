@@ -3,10 +3,11 @@ import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 
 interface PayPalButtonProps {
   amount: number; 
+  paymentUuid: string; // Agrega paymentUuid como propiedad
   onSuccess: (orderId: string) => void; 
 }
 
-const PayPalButton: React.FC<PayPalButtonProps> = ({ amount, onSuccess }) => {
+const PayPalButton: React.FC<PayPalButtonProps> = ({ amount, paymentUuid, onSuccess }) => {
   const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
 
   if (!clientId) {
@@ -19,12 +20,12 @@ const PayPalButton: React.FC<PayPalButtonProps> = ({ amount, onSuccess }) => {
       <PayPalButtons
         createOrder={async () => {
           try {
-            const response = await fetch('/api/createOrder', {
+            const response = await fetch(`http://localhost:3000/payments/create-order/${paymentUuid}`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify({ amount }), 
+              body: JSON.stringify({ currency: 'USD', amount }), // Envía la cantidad y la moneda
             });
 
             const orderData = await response.json();
@@ -32,21 +33,20 @@ const PayPalButton: React.FC<PayPalButtonProps> = ({ amount, onSuccess }) => {
               throw new Error(orderData.message || 'Error creating order');
             }
 
-            return orderData.id; 
+            return orderData.id; // Retorna el ID del pedido
           } catch (error) {
             console.error('Error creating order:', error);
-            return ''; 
+            return ''; // Retorna una cadena vacía en caso de error
           }
         }}
         onApprove={async (data: { orderID: string }) => {
-         
           try {
-            const response = await fetch('/api/captureOrder', {
+            const response = await fetch(`http://localhost:3000/payments/capture-order`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify({ orderID: data.orderID }),
+              body: JSON.stringify({ orderID: data.orderID, paymentUuid }), // Envia el ID del pedido y el UUID del pago
             });
 
             const captureData = await response.json();
@@ -54,7 +54,7 @@ const PayPalButton: React.FC<PayPalButtonProps> = ({ amount, onSuccess }) => {
               throw new Error(captureData.message || 'Error capturing order');
             }
 
-            onSuccess(data.orderID); 
+            onSuccess(data.orderID); // Llama a la función de éxito
           } catch (error) {
             console.error('Error capturing order:', error);
           }

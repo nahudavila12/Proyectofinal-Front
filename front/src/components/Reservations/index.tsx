@@ -1,49 +1,101 @@
+import React, { useContext, useState } from 'react';
 import { IOrderDetail, IReservation, IRoom, IStateBooking, IUser } from '@/interfaces/Interfaces';
-import React, { useState } from 'react';
-import PayPalButton from '../Paypal'; 
+import PayPalButton from '../Paypal';
+import { UserContext } from '@/context/user'; // Asegúrate de que la ruta sea correcta
 
-interface ReservationFormProps {
-  room: IRoom;
-  onReservationComplete: (reservation: IReservation) => void;
-}
+export default function ReservationForm({ room, onReservationComplete }: { room: IRoom; onReservationComplete: (reservation: IReservation) => void; }) {
+  const { user } = useContext(UserContext); // Obtener el usuario del contexto
 
-export default function ReservationForm({ room, onReservationComplete }: ReservationFormProps) {
+  // Inicialización de estados
   const [checkIn, setCheckIn] = useState<string>('');
   const [checkOut, setCheckOut] = useState<string>('');
   const [reservation, setReservation] = useState<IReservation | null>(null);
   const [paymentCompleted, setPaymentCompleted] = useState<boolean>(false);
 
+  // Verificación de usuario
+  if (!user || !user.uuid) {
+    return <div>Error: Usuario no encontrado</div>;
+  }
+
+  // Asegúrate de que todas las propiedades requeridas de IUser estén presentes
+  const currentUser: IUser = {
+    uuid: user.uuid,  // Asegurarse de que no sea undefined
+    firstName: user.firstName || '', // Proporciona un valor por defecto
+    lastName: user.lastName || '',
+    user_name: user.user_name || '',
+    birthday: user.birthday || '',
+    email: user.email || '',
+    address: user.address || '',
+    country: user.country || '',
+    phone: user.phone || '',
+    password: user.password || '',
+    isActive: user.isActive,
+    rol: user.rol,
+    profile: user.profile,
+    owner: user.owner,
+    orderdetail: user.orderdetail,
+    reservation: user.reservation,
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
+    // Validación de fechas
+    if (new Date(checkOut) <= new Date(checkIn)) {
+      alert('La fecha de check-out debe ser posterior a la de check-in.');
+      return;
+    }
+
     const newReservation: IReservation = {
       uuid: crypto.randomUUID(),
       state: IStateBooking.PENDING,
       checkIn: new Date(checkIn),
       checkOut: new Date(checkOut),
-      user: {} as IUser, 
+      user: currentUser, // Usar currentUser aquí
       room: room,
-      order_detail: {} as IOrderDetail, 
+      order_detail: {} as IOrderDetail,
     };
 
-    setReservation(newReservation); 
+    setReservation(newReservation);
+    console.log("Reserva creada:", newReservation); // Agrega esto para verificar
   };
 
-  const handlePaymentSuccess = (orderId: string) => {
+  const handlePaymentSuccess = async (orderId: string) => {
+    console.log("Pago exitoso:", orderId); // Agrega esto para verificar
     if (reservation) {
       const completedReservation: IReservation = {
         ...reservation,
-        state: IStateBooking.ACTIVE, 
+        state: IStateBooking.ACTIVE,
         order_detail: {
-          uuid: orderId, 
+          uuid: orderId,
           date: new Date(),
-          room_total: room.price_per_day, 
-          additionals_services_total: 0, 
+          room_total: room.price_per_day,
+          additionals_services_total: 0,
         } as IOrderDetail,
       };
 
-      onReservationComplete(completedReservation);
-      setPaymentCompleted(true);
+      // Enviar la reserva al backend
+      try {
+        const response = await fetch(`http://localhost:3000/reservations/addReservation/${currentUser.uuid}`, { // Usar el UUID del usuario
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(completedReservation),
+        });
+
+        if (!response.ok) {
+          throw new Error('Error al crear la reserva');
+        }
+
+        const result = await response.json();
+        console.log('Reserva creada en el backend:', result);
+        
+        onReservationComplete(completedReservation);
+        setPaymentCompleted(true);
+      } catch (error) {
+        console.error('Error al crear la reserva:', error);
+      }
     }
   };
 
@@ -77,10 +129,10 @@ export default function ReservationForm({ room, onReservationComplete }: Reserva
         </button>
       </form>
 
-
       {reservation && !paymentCompleted && (
         <PayPalButton
-          amount={room.price_per_day} 
+          amount={room.price_per_day}
+          paymentUuid={reservation.uuid} 
           onSuccess={handlePaymentSuccess}
         />
       )}
