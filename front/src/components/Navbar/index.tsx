@@ -1,38 +1,33 @@
-"use client"
-
+'use client';
 import { NavbarContext } from '@/context/navbar';
 import { UserContext } from '@/context/user';
 import Image from 'next/image';
-import Link from 'next/link'
-import React, { useContext } from 'react'
+import Link from 'next/link';
+import React, { useContext } from 'react';
 import { useState } from 'react';
 import ProfileClient from '../Auth0Google/Profile';
 import { useUser } from '@auth0/nextjs-auth0/client';
 
-
 export default function NavbarComponent() {
   const { isDropdownOpen, toggleDropdown, closeDropdown } = useContext(NavbarContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   const { isLogged, logOut } = useContext(UserContext);
-  
-  
+
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const handleLogOut = () => {
-      logOut();
-      closeDropdown();
-  }
-  // const storedUser = localStorage.getItem('user');
-  // const user = storedUser ? JSON.parse(storedUser) : null;
-  const { user, error, isLoading } = useUser();
+    logOut();
+    closeDropdown();
+  };
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  const { user } = useUser();
+
   
+
   return (
     <nav className={`relative top-0 left-0 w-full bg-second-color/90 transition-transform duration-300 ease-in-out z-50`}>
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        {/* Logo y nombre del sitio */}
         <div>
           <Link href="/" className="flex flex-col items-center space-y-2 rtl:space-y-reverse playfair-display-regular" onClick={closeDropdown}>
             <h1 className="self-center text-white text-4xl">
@@ -40,9 +35,10 @@ export default function NavbarComponent() {
             </h1>
           </Link>
         </div>
+
+        {/* Botón del menú móvil */}
         <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse relative">
-         {/* Mobile menu button */}
-         <button
+          <button
             type="button"
             className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-white rounded-lg md:hidden hover:bg-third-color focus:outline-none focus:ring-2 focus:ring-gray-200"
             aria-controls="navbar-user"
@@ -67,6 +63,8 @@ export default function NavbarComponent() {
             </svg>
           </button>
         </div>
+
+        {/* Menú de navegación */}
         <div
           className={`items-center justify-between hidden w-full md:flex md:w-auto md:order-1 ${
             isMenuOpen ? 'block' : 'hidden'
@@ -90,7 +88,7 @@ export default function NavbarComponent() {
                 className="nav-link block py-2 px-3 md:p-0 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-third-color"
                 aria-current="page"
                 onClick={closeDropdown}
-              >  
+              >
                 Alojamientos
               </Link>
             </li>
@@ -101,37 +99,30 @@ export default function NavbarComponent() {
                 aria-current="page"
                 onClick={closeDropdown}
               >
+                Owner Dashboard
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/admin-dashboard"
+                className="nav-link block py-2 px-3 md:p-0 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-third-color"
+                aria-current="page"
+                onClick={closeDropdown}
+              >
                 Admin Dashboard
-              </Link>
-            </li>
-           
-            <li>
-              <Link
-                href="/about"
-                className="nav-link block py-2 px-3 md:p-0 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-third-color"
-                aria-current="page"
-                onClick={closeDropdown}
-              >
-                Sobre nosotros
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/contact"
-                className="nav-link block py-2 px-3 md:p-0 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-third-color"
-                aria-current="page"
-                onClick={closeDropdown}
-              >
-                Contacto
               </Link>
             </li>
           </ul>
         </div>
+
+        {/* Área de usuario */}
         <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse relative">
-         <ProfileClient />
-         
-        
-        <button
+
+          {/* ProfileClient */}
+          <ProfileClient />
+
+          {/* Botón de foto de usuario */}
+          <button
             type="button"
             className="flex text-sm bg-white rounded-full md:me-0 focus:ring-4 focus:ring-gray-300"
             id="user-menu-button"
@@ -141,12 +132,14 @@ export default function NavbarComponent() {
             <span className="sr-only">Open user menu</span>
             <Image
               className="w-8 h-8 rounded-full"
-              src="https://res.cloudinary.com/dhrys2lqz/image/upload/v1724433384/usuario_flvwps.png"
+              src={user?.picture || "https://res.cloudinary.com/dhrys2lqz/image/upload/v1724433384/usuario_flvwps.png"}
               alt="user photo"
               width={70}
               height={70}
             />
           </button>
+
+          {/* Dropdown del usuario */}
           <div
             className={`absolute right-0 top-8 z-50 my-4 text-base list-none bg-second-color divide-y divide-gray-100 rounded-lg shadow ${
               isDropdownOpen ? 'block' : 'hidden'
@@ -154,40 +147,40 @@ export default function NavbarComponent() {
             id="user-dropdown"
           >
             <ul className="py-2" aria-labelledby="user-menu-button">
-              <li>
+              <li className='text-center'>
                 <Link
                   href="/auth-signup"
                   className="block px-4 py-2 text-sm text-white hover:bg-third-color"
-                  onClick={closeDropdown} // Cierra el menú al hacer clic
+                  onClick={closeDropdown}
                 >
                   Registro
                 </Link>
               </li>
-              <li>
+              <li className='text-center'>
                 <Link
                   href="/auth-signin"
                   className="block px-4 py-2 text-sm text-white hover:bg-third-color"
-                  onClick={closeDropdown} // Cierra el menú al hacer clic
+                  onClick={closeDropdown}
                 >
                   Iniciar Sesión
                 </Link>
               </li>
               {isLogged && (
-              <li>
-                <Link
-                  href="/"
-                  className="block px-4 py-2 text-sm text-white hover:bg-third-color"
-                  onClick={handleLogOut} 
-                >
-                  Salir
-                </Link>
-              </li>
+                <li className='text-center'>
+                  <Link
+                    href="/"
+                    className="block px-4 py-2 text-sm text-white hover:bg-third-color"
+                    onClick={handleLogOut}
+                  >
+                    Salir
+                  </Link>
+                </li>
               )}
-               <div className="space-y-4">
+              <div className="space-y-4">
                 {user && (
                   <div className="text-center">
-                    <Link 
-                      href="/api/auth/logout" 
+                    <Link
+                      href="/api/auth/logout"
                       className="block px-4 py-2 text-sm text-white hover:bg-third-color"
                     >
                       Salir
@@ -195,12 +188,11 @@ export default function NavbarComponent() {
                   </div>
                 )}
               </div>
-              
             </ul>
           </div>
-          {/* Mobile menu button */}
-          
-         <button
+
+          {/* Botón del menú móvil */}
+          <button
             type="button"
             className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
             aria-controls="navbar-user"
@@ -224,58 +216,34 @@ export default function NavbarComponent() {
               />
             </svg>
           </button>
-         </div>
-        {/* Mobile menu items */}
+        </div>
+
+        {/* Menú móvil */}
         <div
           className={`top-16 left-0 w-full bg-second-color md:hidden ${
             isMenuOpen ? 'block' : 'hidden'
           }`}
-          id="mobile-menu"
+          id="navbar-user-mobile"
         >
-          <ul className="flex flex-col font-medium p-4 rounded-lg bg-second-color">
+          <ul className="flex flex-col p-4 border border-gray-100 rounded-lg bg-white md:bg-transparent">
             <li>
-              <Link
-                href="/home"
-                className="block py-2 px-3 text-white rounded hover:bg-third-color"
-                onClick={toggleMenu} // Cierra el menú al hacer clic
-              >
+              <Link href="/" className="block py-2 text-white rounded hover:bg-third-color" onClick={toggleMenu}>
                 Inicio
               </Link>
             </li>
             <li>
-              <Link
-                href="/checkout"
-                className="block py-2 px-3 text-white rounded hover:bg-third-color"
-                onClick={toggleMenu} // Cierra el menú al hacer clic
-              >
-                Habitaciones
+              <Link href="/home" className="block py-2 text-white rounded hover:bg-third-color" onClick={toggleMenu}>
+                Alojamientos
               </Link>
             </li>
             <li>
-              <Link
-                href="/user-dashboard"
-                className="block py-2 px-3 text-white rounded hover:bg-third-color"
-                onClick={toggleMenu} // Cierra el menú al hacer clic
-              >
-                Servicios
+              <Link href="/property-own-list" className="block py-2 text-white rounded hover:bg-third-color" onClick={toggleMenu}>
+                Owner Dashboard
               </Link>
             </li>
             <li>
-              <Link
-                href="/contact"
-                className="block py-2 px-3 text-white rounded hover:bg-third-color"
-                onClick={toggleMenu} // Cierra el menú al hacer clic
-              >
-                Sobre nosotros
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/contact"
-                className="block py-2 px-3 text-white rounded hover:bg-third-color"
-                onClick={toggleMenu} // Cierra el menú al hacer clic
-              >
-                Contacto
+              <Link href="/admin-dashboard" className="block py-2 text-white rounded hover:bg-third-color" onClick={toggleMenu}>
+                Admin Dashboard
               </Link>
             </li>
           </ul>

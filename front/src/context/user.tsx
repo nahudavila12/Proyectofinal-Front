@@ -1,9 +1,10 @@
 "use client";
 
 
-import { ILogin, IRegisterOwner, IUser, IUserContextType, IUserResponse } from "@/interfaces/Interfaces";
+import { ILogin, IPayload, IRegisterOwner, IUser, IUserContextType, IUserResponse } from "@/interfaces/Interfaces";
 // import { getUsersOrders } from "@/lib/server/fetchOrders";
 import { postSignin, postSignup, postSignupOwner } from "@/lib/server/fetchUsers";
+import { jwtDecode } from "jwt-decode";
 
 import { createContext, useEffect, useState } from "react";
 
@@ -43,10 +44,12 @@ export const UserNormalProvider = ({children}: {children: React.ReactNode}) => {
             if (ownerUUID) {
                 localStorage.setItem("ownerUUID", ownerUUID);
             }
+
+            const decoded: IPayload = jwtDecode(generateAccessToken);
     
             // Almacenar el token y datos en localStorage
-            setUser(data);
-            localStorage.setItem("user", JSON.stringify(data));
+            setUser({ ...data, ...decoded });
+            localStorage.setItem("user", JSON.stringify({ ...data, ...decoded }));
             localStorage.setItem("Acces Token", generateAccessToken);
             localStorage.setItem("Refresh Token",generateRefreshToken);
             setIsLogged(true);
@@ -109,14 +112,24 @@ export const UserNormalProvider = ({children}: {children: React.ReactNode}) => {
             setIsLogged(false);
     };
 
-     useEffect(() => {
+    useEffect(() => {
         const token = localStorage.getItem("Acces Token");
+        const storedUser = localStorage.getItem("user");
+    
         if (token) {
+            const decoded: IPayload = jwtDecode(token);
+            setUser((prev) => ({ ...prev, ...decoded })); // Actualiza `user` solo si es necesario
             setIsLogged(true);
         } else {
             setIsLogged(false);
         }
-    }, [user]);
+    
+        if (storedUser) {
+            setUser(JSON.parse(storedUser)); // Configura el estado de `user` si hay un usuario almacenado
+        } else {
+            setUser(null);
+        }
+    }, []); 
 
     // Efecto para obtener el usuario desde el almacenamiento local
     useEffect(() => {

@@ -47,6 +47,7 @@ export const postSignin = async (credentials: ILogin) => {
 
 
 export const postSignupOwner = async (uuid: string, ownerData: IRegisterOwner) => {
+  console.log("Datos enviados en la solicitud owner:", uuid, ownerData); // Agrega esto para verificar los datos
   // Construye la URL usando el UUID proporcionado como parámetro
   const url = `http://localhost:3001/owners/addOwner/${uuid}`;
 

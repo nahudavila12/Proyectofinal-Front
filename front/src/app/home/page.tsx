@@ -167,20 +167,23 @@ import { useState } from 'react';
 import { SearchBar } from '@/components/SearchBar';
 import { PropertyFilters } from '@/components/Property-filters';
 import PropertyList from '@/components/Property-list';
+import { IProperty } from '@/interfaces/Interfaces';
 
 export interface PropertyFilters {
   location?: string;
   type?: 'HOTEL' | 'CABANA' | 'DEPARTAMENTO';
   minPrice?: number;
   maxPrice?: number;
+  roomUuid?: string; 
 }
 
 export default function Home() {
   const [filters, setFilters] = useState<PropertyFilters>({});
+  const [properties, setProperties] = useState<IProperty[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
 
-  const totalPages = Math.ceil(0 / itemsPerPage); // Ajusta esta línea según tus necesidades
+  const totalPages = Math.ceil(properties.length / itemsPerPage); 
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -188,7 +191,11 @@ export default function Home() {
       <SearchBar filters={filters} setFilters={setFilters} />
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mt-8">
         <div className="md:col-span-1">
-          <PropertyFilters filters={filters} setFilters={setFilters} />
+          <PropertyFilters 
+            filters={filters} 
+            setFilters={setFilters} 
+            setProperties={setProperties} // Pasa setProperties aquí
+          />
         </div>
         <div className="md:col-span-3">
           <PropertyList
