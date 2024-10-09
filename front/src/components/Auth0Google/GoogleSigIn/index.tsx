@@ -35,7 +35,7 @@ export default function GoogleSignInButton() {
           </div>
         ) : (
           <Link 
-            href="/api/auth/login" 
+            href="/api/home" 
             className="block w-full text-center text-white bg-second-color hover:bg-third-color font-medium py-2 px-4 rounded-lg transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-third-color"
           >
             Iniciar sesión con Google

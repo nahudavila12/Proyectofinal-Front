@@ -149,17 +149,17 @@ export default function LandingPage() {
         >
           <source src="https://res.cloudinary.com/dhrys2lqz/video/upload/v1726195353/vecteezy_aerial-view-of-pink-beach-in-komodo_30468522_kqrsuk.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-first-color">
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-black-color">
             <div>
             <h1 className="self-center text-6xl playfair-display-bold">
               InstaStay
             </h1>
-            <span className="text-2xl text-white text-left w-full playfair-display-regular">
+            <span className="text-2xl text-black text-left w-full playfair-display-regular">
               &quot;Encuentra tu alojamiento perfecto al mejor precio.&quot;
             </span>
             </div>
             <Link href="/home">
-            <button className="text-white bg-second-color hover:bg-third-color focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+            <button className="text-black bg-second-color hover:bg-first-color focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
               Reserva ahora!
             </button>
           </Link>
