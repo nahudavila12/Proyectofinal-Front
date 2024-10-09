@@ -18,12 +18,12 @@ const StatisticsGraphs: React.FC = () => {
   };
 
   const propertyData = {
-    labels: ['Casas', 'Departamentos', 'Cabañas'],
+    labels: ['Hoteles', 'Departamentos', 'Cabañas'],
     datasets: [
       {
         label: 'Tipos de Propiedades',
         data: [20, 15, 10],
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+        backgroundColor: ['#FFF5EB', '#4D8DA1', '#92D6BB'],
       },
     ],
   };

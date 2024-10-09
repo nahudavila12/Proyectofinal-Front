@@ -34,18 +34,19 @@ interface IProfile{
   user: IUser;
 }
 
-interface IUserContextType {
-  user: Partial<IUserResponse> | null;
-  setUser: React.Dispatch<React.SetStateAction<Partial<IUserResponse> | null>>,
-  isLogged: boolean,
-  setIsLogged: (isLogged: boolean) => void,
-  signIn: (credentials: ILogin) => Promise<boolean>,
-  signUp: (user: Omit<IUser, "uuid">) => Promise<{ uuid: string } | false>;
-  signUpOwner: (uuid: string, ownerData: IRegisterOwner) => Promise<boolean>,
-  // getOrders: () => void,
-  // orders: IOrderResponse[] | [],
-  logOut: () => void,
+
+
+ interface IUserContextType {
+  user: Partial<IUser> | null;
+  setUser: (user: Partial<IUser> | null) => void;
+  isLogged: boolean;
+  setIsLogged: (isLogged: boolean) => void;
+  signIn: (credentials: ILogin) => Promise<boolean>;
+  signUp: (user: Omit<IUser, "uuid">) => Promise<boolean>;
+  signUpOwner: (uuid: string, ownerData: IRegisterOwner) => Promise<boolean>;
+  logOut: () => void;
 }
+
 
 export enum PropertyType {
   HOTEL = 'hotel',
@@ -60,7 +61,7 @@ interface IProperty {
   propertyType: PropertyType;
   rate: number;
   isActive: boolean;
-  img: IPropertyImg[];
+  propImg: IPropertyImg[];
   owner: IOwner;
   room: IRoom[];
 }
@@ -111,7 +112,7 @@ interface IRoom {
 
 
 interface IRoomService {
-    id: string;
+    uuid: string;
     serviceName: string;
     room: IRoom;
 }
@@ -242,7 +243,14 @@ interface IHotelFormProps {
   initialData?: IHotelData
 }
 
-
+interface IPayload {
+  uuid: string;
+  user_name: string;
+  email: string;
+  ownerUuid: string;
+  rol: string;
+  exp: number; // Tiempo de expiración del token
+}
 
 
 export type {
@@ -264,4 +272,5 @@ export type {
     IProfile,
     IOrderDetail,
     IRegisterOwner,
+    IPayload,
   }

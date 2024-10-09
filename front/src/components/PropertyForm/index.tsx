@@ -179,7 +179,7 @@ export default function AccommodationForm({
   
     // Hacer la petición al backend
     try {
-      const response = await fetch(`http://localhost:3001/properties/addProperty/${ownerUUID}`, {
+      const response = await fetch(`http://localhost:3000/properties/addProperty/${ownerUUID}`, {
         method: 'POST',
         body: formData,
       });

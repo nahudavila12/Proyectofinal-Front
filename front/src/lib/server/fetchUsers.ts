@@ -6,7 +6,7 @@ import { IRegisterUser } from "../../interfaces/Interfaces";
 export const postSignup = async (user: IRegisterUser) => {
   console.log("Datos enviados en la solicitud:", user); // Agrega esto para verificar los datos
 
-  const response = await fetch("http://localhost:3000/auth/signup", {
+  const response = await fetch("http://localhost:3001/auth/signup", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -25,7 +25,7 @@ export const postSignup = async (user: IRegisterUser) => {
 
 export const postSignin = async (credentials: ILogin) => {
 
-  const response = await fetch("http://localhost:3000/auth/signin", {
+  const response = await fetch("http://localhost:3001/auth/signin", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -47,8 +47,9 @@ export const postSignin = async (credentials: ILogin) => {
 
 
 export const postSignupOwner = async (uuid: string, ownerData: IRegisterOwner) => {
+  console.log("Datos enviados en la solicitud owner:", uuid, ownerData); // Agrega esto para verificar los datos
   // Construye la URL usando el UUID proporcionado como parámetro
-  const url = `http://localhost:3000/owners/addOwner/${uuid}`;
+  const url = `http://localhost:3001/owners/addOwner/${uuid}`;
 
   // Realiza la solicitud POST para registrar al propietario con la URL dinámica
   const response = await fetch(url, {
