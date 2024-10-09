@@ -1,12 +1,26 @@
-import React from 'react';
-import Image from 'next/image';
-import { IProperty } from '@/interfaces/Interfaces';
+"use client";
+import React, { useState } from "react";
+import Image from "next/image";
+import {
+  IProperty,
+  IRoom,
+  IReservation,
+} from "@/interfaces/Interfaces";
+import ReservationForm from "../Reservations";
 
 interface PropertyDetailProps {
   property: IProperty;
 }
 
 const PropertyDetail: React.FC<PropertyDetailProps> = ({ property }) => {
+  const [selectedRoom, setSelectedRoom] = useState<IRoom | null>(null);
+  const [reservationCompleted, setReservationCompleted] = useState<IReservation | null>(null);
+  const [paymentCompleted, ] = useState<boolean>(false);
+
+  const handleReservationComplete = (reservation: IReservation) => {
+    setReservationCompleted(reservation);
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-4">{property.name}</h1>
@@ -27,11 +41,19 @@ const PropertyDetail: React.FC<PropertyDetailProps> = ({ property }) => {
           )}
         </div>
         <div>
-          <p className="text-xl mb-2"><strong>Ubicación:</strong> {property.location}</p>
-          <p className="text-xl mb-2"><strong>Tipo de propiedad:</strong> {property.propertyType}</p>
-          <p className="text-xl mb-2"><strong>Calificación:</strong> {property.rate} / 5</p>
-          <p className="text-xl mb-4"><strong>Estado:</strong> {property.isActive ? 'Activo' : 'Inactivo'}</p>
-          
+          <p className="text-xl mb-2">
+            <strong>Ubicación:</strong> {property.location}
+          </p>
+          <p className="text-xl mb-2">
+            <strong>Tipo de propiedad:</strong> {property.propertyType}
+          </p>
+          <p className="text-xl mb-2">
+            <strong>Calificación:</strong> {property.rate} / 5
+          </p>
+          <p className="text-xl mb-4">
+            <strong>Estado:</strong> {property.isActive ? "Activo" : "Inactivo"}
+          </p>
+
           <h2 className="text-2xl font-semibold mb-2">Habitaciones</h2>
           {property.room && property.room.length > 0 ? (
             <ul className="list-disc pl-5">
@@ -41,6 +63,12 @@ const PropertyDetail: React.FC<PropertyDetailProps> = ({ property }) => {
                   <p>Capacidad: {room.capacity} personas</p>
                   <p>Precio por día: ${room.price_per_day}</p>
                   <p>Disponibilidad: {room.disponibility}</p>
+                  <button
+                    className="mt-2 text-blue-500 hover:underline"
+                    onClick={() => setSelectedRoom(room)}
+                  >
+                    Reservar esta habitación
+                  </button>
                 </li>
               ))}
             </ul>
@@ -49,8 +77,32 @@ const PropertyDetail: React.FC<PropertyDetailProps> = ({ property }) => {
           )}
         </div>
       </div>
+
+      {selectedRoom && (
+        <div className="mt-8">
+          <h2 className="text-2xl font-semibold mb-4">Formulario de Reserva</h2>
+          <ReservationForm
+            room={selectedRoom}
+            onReservationComplete={handleReservationComplete}
+          />
+
+          {/* Mensaje de pago completado */}
+          {paymentCompleted && (
+            <div className="mt-4 text-green-600">
+              ¡Pago completado con éxito! Tu reserva ha sido confirmada.
+            </div>
+          )}
+        </div>
+      )}
+
+      {reservationCompleted && (
+        <div className="mt-8 text-green-600">
+          <p>¡Reserva completada para la habitación {reservationCompleted.room.room_number}!</p>
+        </div>
+      )}
     </div>
   );
 };
 
 export default PropertyDetail;
+

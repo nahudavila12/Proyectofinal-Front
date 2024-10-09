@@ -11,15 +11,19 @@
   "dependencies": {
     "@auth0/nextjs-auth0": "^3.5.0",
     "@chakra-ui/icons": "^2.2.4",
-    "@chakra-ui/react": "^2.10.2",
+    "@chakra-ui/react": "^2.10.1",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
     "@paypal/react-paypal-js": "^8.7.0",
+    "@shadcn/ui": "^0.0.4",
     "chart.js": "^4.4.4",
-    "jwt-decode": "^4.0.0",
+    "framer-motion": "^11.11.4",
     "lucide-react": "^0.451.0",
     "next": "14.2.13",
     "react": "^18",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18",
+    "tailwindcss-animate": "^1.0.7",
     "uuid": "^10.0.0"
   },
   "devDependencies": {
