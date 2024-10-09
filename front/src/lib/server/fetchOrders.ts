@@ -5,7 +5,7 @@ import { IProperty } from "../../interfaces//Interfaces";
 export const postOrders = async (cartItems: IProperty[]) => {
     const products = cartItems.map((item) => item.uuid);
     const token = localStorage.getItem("token");
-    const response = await fetch ("http://localhost:5000/orders", {
+    const response = await fetch ("http://localhost:3000/orders", {
         method: "POST",  
         headers: {
             Authorization: `${token}`,
@@ -18,7 +18,7 @@ export const postOrders = async (cartItems: IProperty[]) => {
   }
 
 export const getUsersOrders = async (token: string) => {
-    const response = await fetch("http://localhost:5000/users/orders", {
+    const response = await fetch("http://localhost:3000/users/orders", {
         method: "GET",
         headers: {
             Authorization: `${token}`,
