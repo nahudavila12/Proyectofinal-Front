@@ -5,16 +5,17 @@ import { UserContext } from '@/context/user'; // Asegúrate de que la ruta sea c
 
 export default function ReservationForm({ room, onReservationComplete }: { room: IRoom; onReservationComplete: (reservation: IReservation) => void; }) {
   const { user } = useContext(UserContext); // Obtener el usuario del contexto
-
+  console.log("Usuario en ReservationForm:", user);
   // Inicialización de estados
   const [checkIn, setCheckIn] = useState<string>('');
   const [checkOut, setCheckOut] = useState<string>('');
   const [reservation, setReservation] = useState<IReservation | null>(null);
   const [paymentCompleted, setPaymentCompleted] = useState<boolean>(false);
-
+  
   // Verificación de usuario
   if (!user || !user.uuid) {
-    return <div>Error: Usuario no encontrado</div>;
+    console.error("Error: Usuario no encontrado. Por favor, inicie sesión para reservar."); // Log de error
+        return <p>Error: Usuario no encontrado. Por favor, inicie sesión para reservar.</p>;
   }
 
   // Asegúrate de que todas las propiedades requeridas de IUser estén presentes
@@ -76,7 +77,7 @@ export default function ReservationForm({ room, onReservationComplete }: { room:
 
       // Enviar la reserva al backend
       try {
-        const response = await fetch(`http://localhost:3000/reservations/addReservation/${currentUser.uuid}`, { // Usar el UUID del usuario
+        const response = await fetch(`http://localhost:3001/reservations/addReservation/${currentUser.uuid}`, { // Usar el UUID del usuario
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

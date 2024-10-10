@@ -2,11 +2,13 @@
 
 import { useState, useContext } from 'react';
 import { Button, Input, FormControl, FormLabel, Progress, Select, Box, Text, InputGroup, InputLeftElement } from '@chakra-ui/react';
-import { Mail, Lock, User, Calendar, Phone, MapPin, Flag } from 'lucide-react';
+import { Mail, Lock, User, Calendar, Phone, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { UserContext } from '@/context/user'; // Ajusta la ruta según la ubicación de tu contexto
+import { useRouter } from 'next/navigation';
 
 export default function InstaStayRegistro() {
+  const router = useRouter();
   const { signUp} = useContext(UserContext); // Usamos el contexto para registrar usuarios
 
   const [formData, setFormData] = useState({
@@ -53,6 +55,7 @@ export default function InstaStayRegistro() {
   
     try {
       await signUp(userData); 
+      router.push("/auth-signin");
       setError('');
       
     } catch  {
@@ -67,10 +70,10 @@ export default function InstaStayRegistro() {
   };
 
   return (
-    <Box className="min-h-screen bg-gradient-to-br from-sky-300 via-blue-300 to-cyan-400 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <Box className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <Box className="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-2xl transform transition-all hover:scale-105 duration-300">
         <Box>
-          <Text fontSize="4xl" fontWeight="bold" textAlign="center" color="sky.600" mb={6}>InstaStay</Text>
+          <Text fontSize="4xl" fontWeight="bold" textAlign="center" color="#4D8DA1" mb={6}>InstaStay</Text>
           <Text mt={6} textAlign="center" fontSize="3xl" fontWeight="extrabold" color="gray.900">
             Registro de Usuario
           </Text>
@@ -171,7 +174,7 @@ export default function InstaStayRegistro() {
               </InputGroup>
             </FormControl>
             <FormControl>
-              <FormLabel htmlFor="user_name" srOnly>Nombre de Usuario</FormLabel>
+              <FormLabel htmlFor="user_name"  srOnly>Nombre de Usuario</FormLabel>
               <InputGroup>
                 <InputLeftElement pointerEvents="none">
                   <User className="text-gray-400" />
@@ -257,9 +260,6 @@ export default function InstaStayRegistro() {
                   <option value="CO">Colombia</option>
                   <option value="PE">Perú</option>
                 </Select>
-                <InputLeftElement pointerEvents="none">
-                  <Flag className="text-gray-400" size={18} />
-                </InputLeftElement>
               </InputGroup>
             </FormControl>
           </Box>

@@ -1,6 +1,6 @@
 "use client";
 
-import { ILogin, IRegisterOwner, IUser, IUserContextType, IUserResponse } from "@/interfaces/Interfaces";
+import { ILogin, IRegisterOwner, IUser, IUserContextType } from "@/interfaces/Interfaces";
 import { postSignin, postSignup, postSignupOwner } from "@/lib/server/fetchUsers";
 import { createContext, useEffect, useState } from "react";
 
@@ -21,16 +21,30 @@ export const UserNormalProvider = ({ children }: { children: React.ReactNode }) 
 
     const signIn = async (credentials: ILogin) => {
         try {
-            const data: IUserResponse = await postSignin(credentials);
-            const { login, user: userInfo, token } = data;
-
-            if (!login || !token) {
-                throw new Error("Login failed");
+            const data = await postSignin(credentials);
+    
+            // Descomponer la respuesta para mejor comprensión
+            const { generateAccessToken, generateRefreshToken, ownerUUID } = data;
+    
+       
+           
+            // Condición actualizada para verificar la existencia de `generateAccessToken`
+            if (!generateAccessToken) { 
+                throw new Error("Access token not found");
+            }
+            if (ownerUUID) {
+                localStorage.setItem("ownerUUID", ownerUUID);
             }
 
-            setUser(userInfo);
-            localStorage.setItem("user", JSON.stringify(userInfo));
-            localStorage.setItem("Acces Token", token);
+            // const decoded: IPayload = jwtDecode(generateAccessToken);
+
+            // Almacenar el token y datos en localStorage
+            setUser(data);
+            localStorage.setItem("user", JSON.stringify(data));
+            setUser({ ...data});
+            localStorage.setItem("user", JSON.stringify({ ...data}));
+            localStorage.setItem("Acces Token", generateAccessToken);
+            localStorage.setItem("Refresh Token",generateRefreshToken);
             setIsLogged(true);
             return true;
         } catch (error) {
@@ -38,6 +52,32 @@ export const UserNormalProvider = ({ children }: { children: React.ReactNode }) 
             return false;
         }
     };
+    // const signIn = async (credentials: ILogin) => {
+    //     try {
+            
+    //         const data = await postSignin(credentials);
+    //         const { login, user: userInfo, token } = data;
+
+    //         if (!login || !token) {
+    //             throw new Error("Login failed");
+    //         }
+
+    //         // Almacenar el token y datos en localStorage
+    //         setUser(userInfo);
+    //         localStorage.setItem("user", JSON.stringify(userInfo));
+    //         localStorage.setItem("Acces Token", token);
+    //         setIsLogged(true);
+    //         localStorage.setItem("user", JSON.stringify(data));
+    //         localStorage.setItem("user", JSON.stringify({ ...data }));
+    //         localStorage.setItem("user", JSON.stringify(userInfo));
+    //         console.log("Usuario iniciado sesión:", data);
+    //         return true;
+    //     } catch (error) {
+    //         console.error("Login failed:", error);
+    //         return false;
+    //     }
+    // };
+
 
     const signUp = async (user: Omit<IUser, "uuid">): Promise<boolean> => {
         try {
@@ -61,24 +101,44 @@ export const UserNormalProvider = ({ children }: { children: React.ReactNode }) 
 
     const logOut = () => {
         localStorage.removeItem("user");
-        localStorage.removeItem("Acces Token");
+        localStorage.removeItem("Acces Token"); // Asegúrate de eliminar el token correcto
+        localStorage.removeItem("Refresh Token");
+        localStorage.removeItem("ownerUUID")
         setUser(null);
         setIsLogged(false);
-    };
+};
 
     useEffect(() => {
         const token = localStorage.getItem("Acces Token");
         setIsLogged(!!token);
+        console.log("Estado de isLogged:", !!token);
     }, [user]);
-
+    
     useEffect(() => {
+        const token = localStorage.getItem("Acces Token");
         const storedUser = localStorage.getItem("user");
+
+        if (token) {
+            // const decoded: IPayload = jwtDecode(token);
+            setUser((prev) => ({ ...prev })); // Actualiza `user` solo si es necesario
+            setIsLogged(true);
+        } else {
+            setIsLogged(false);
+        }
         if (storedUser) {
-            setUser(JSON.parse(storedUser));
+            setUser(JSON.parse(storedUser)); // Configura el estado de `user` si hay un usuario almacenado
         } else {
             setUser(null);
         }
-    }, []); // Solo se ejecuta al montar el componente
+    }, []); 
+    useEffect(() => {
+        const user = localStorage.getItem("user");
+        if (user) {
+            setUser(JSON.parse(user));
+        } else {
+            setUser(null);
+        }
+    }, []); // Solo se ejecuta al montar el component // Solo se ejecuta al montar el componente
     
     return (
         <UserContext.Provider 
