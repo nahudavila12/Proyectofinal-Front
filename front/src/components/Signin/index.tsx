@@ -41,7 +41,7 @@ export default function InstaStayLogin() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     // Aquí iría la lógica de autenticación
     if (!formData.email || !formData.password) {
       setError('Por favor completa todos los campos.');
@@ -49,7 +49,7 @@ export default function InstaStayLogin() {
     }
 
     const success = await signIn(formData);
-    
+
     if (success) {
       // Lógica para determinar el rol
       const userRole = determineUserRole(formData.email);
@@ -65,6 +65,8 @@ export default function InstaStayLogin() {
     } else {
       setError('Credenciales inválidas');  
     }
+
+
   };
 
   const determineUserRole = (email: string): IRol => {
@@ -170,7 +172,6 @@ export default function InstaStayLogin() {
         <Text textAlign="center" mt={4}>
           <Link color="blue.400" href="/auth-signup">¿No tienes una cuenta? Regístrate</Link>
         </Text>
-        
         <Text textAlign="center" mt={4}>O</Text>
         <GoogleSignInButton />
       </Box>

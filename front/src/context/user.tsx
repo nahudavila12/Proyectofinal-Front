@@ -1,3 +1,4 @@
+
 /* "use client";
 
 import { ILogin, IRegisterOwner, IUser, IUserContextType, IUserResponse } from "@/interfaces/Interfaces";
@@ -5,6 +6,7 @@ import { postSignin, postSignup, postSignupOwner } from "@/lib/server/fetchUsers
 import { createContext, useEffect, useState } from "react";
 
 export const UserContext = createContext<IUserContextType>({
+
     user: null,
     setUser: () => {},
     isLogged: false,
@@ -106,6 +108,7 @@ import { postSignin, postSignup, postSignupOwner } from "@/lib/server/fetchUsers
 import { createContext, useEffect, useState } from "react";
 
 export const UserContext = createContext<IUserContextType>({
+
     user: null,
     setUser: () => {},
     isLogged: false,
@@ -163,6 +166,7 @@ export const UserNormalProvider = ({ children }: { children: React.ReactNode }) 
     //             throw new Error("Login failed");
     //         }
 
+
     //         // Almacenar el token y datos en localStorage
     //         setUser(userInfo);
     //         localStorage.setItem("user", JSON.stringify(userInfo));
@@ -178,6 +182,7 @@ export const UserNormalProvider = ({ children }: { children: React.ReactNode }) 
     //         return false;
     //     }
     // };
+
 
 
     const signUp = async (user: Omit<IUser, "uuid">): Promise<boolean> => {

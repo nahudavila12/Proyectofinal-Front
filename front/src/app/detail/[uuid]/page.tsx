@@ -12,4 +12,4 @@ export default async function PropertyDetailPage({ params }: { params: { uuid: s
       <PropertyDetail property={property} /> 
     </div>
   )
-}  
+}
