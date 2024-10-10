@@ -1,13 +1,11 @@
 import { IUser } from '@/interfaces/Interfaces';
 import React, { useEffect, useState } from 'react';
-
 export default function UsersSection() {
   const [users, setUsers] = useState<IUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10); 
-
   useEffect(() => {
     async function fetchUsers() {
       try {
@@ -23,7 +21,6 @@ export default function UsersSection() {
         setLoading(false);
       }
     }
-
     fetchUsers();
   }, [page, limit]);
 
@@ -44,7 +41,9 @@ export default function UsersSection() {
 
   const deleteUser = async (uuid: string) => {
     try {
-      const res = await fetch(`http://localhost:3001/users/delete/${uuid}`, {
+
+      const res = await fetch(`http://localhost:3000/users/delete/${uuid}`, {
+
         method: 'DELETE', 
       });
       if (!res.ok) {
@@ -56,15 +55,12 @@ export default function UsersSection() {
       setError(err instanceof Error ? err.message : 'Error desconocido');
     }
   };
-
   if (loading) {
     return <div>Cargando usuarios...</div>;
   }
-
   if (error) {
     return <div>Error: {error}</div>;
   }
-
   return (
     <div className="bg-white p-6 rounded-md shadow-md">
       <h2 className="text-xl font-semibold mb-4">Usuarios</h2>
@@ -78,7 +74,6 @@ export default function UsersSection() {
           <option value={50}>50</option>
         </select>
       </div>
-
       <table className="w-full text-left">
         <thead>
           <tr>

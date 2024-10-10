@@ -3,7 +3,8 @@ import { NavbarContext } from '@/context/navbar';
 import { UserContext } from '@/context/user';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useContext } from 'react';
+
+import React, { useContext, useEffect } from 'react';
 import { useState } from 'react';
 import ProfileClient from '../Auth0Google/Profile';
 import { useUser } from '@auth0/nextjs-auth0/client';
@@ -12,6 +13,9 @@ export default function NavbarComponent() {
   const { isDropdownOpen, toggleDropdown, closeDropdown } = useContext(NavbarContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isLogged, logOut } = useContext(UserContext);
+
+  const [userName, setUserName] = useState('');
+
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -22,7 +26,14 @@ export default function NavbarComponent() {
 
   const { user } = useUser();
 
-  
+
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      const { user_name } = JSON.parse(userData);
+      setUserName(user_name);
+    }
+  }, []);
 
   return (
     <nav className={`relative top-0 left-0 w-full bg-second-color/90 transition-transform duration-300 ease-in-out z-50`}>
@@ -114,13 +125,18 @@ export default function NavbarComponent() {
             </li>
           </ul>
         </div>
-
         {/* Área de usuario */}
         <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse relative">
 
           {/* ProfileClient */}
           <ProfileClient />
 
+          {/* Nombre de usuario */}
+          <div className='m-4'>
+          {userName && (
+              <span className=" text-white text-sm">{userName}</span>
+            )}
+          </div>
           {/* Botón de foto de usuario */}
           <button
             type="button"

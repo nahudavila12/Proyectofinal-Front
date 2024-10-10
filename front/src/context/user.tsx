@@ -1,7 +1,7 @@
 "use client";
 
-import { ILogin, IRegisterOwner, IUser, IUserContextType, IUserResponse } from "@/interfaces/Interfaces";
-import { postSignin, postSignup, postSignupOwner } from "@/lib/server/fetchUsers";
+import { ILogin, IRegisterOwner, ISendEmailData, IUser, IUserContextType } from "@/interfaces/Interfaces";
+import { postSignin, postSignup, postSignupOwner, postSendEmail } from "@/lib/server/fetchUsers"; // Asegúrate de que esta función exista
 import { createContext, useEffect, useState } from "react";
 
 export const UserContext = createContext<IUserContextType>({
@@ -13,6 +13,7 @@ export const UserContext = createContext<IUserContextType>({
     signUp: async () => false,
     signUpOwner: async () => false,
     logOut: () => {},
+    sendEmail: async () => false,
 });
 
 export const UserNormalProvider = ({ children }: { children: React.ReactNode }) => {
@@ -21,16 +22,20 @@ export const UserNormalProvider = ({ children }: { children: React.ReactNode }) 
 
     const signIn = async (credentials: ILogin) => {
         try {
-            const data: IUserResponse = await postSignin(credentials);
-            const { login, user: userInfo, token } = data;
+            const data = await postSignin(credentials);
+            const { generateAccessToken, generateRefreshToken, ownerUUID } = data;
 
-            if (!login || !token) {
-                throw new Error("Login failed");
+            if (!generateAccessToken) { 
+                throw new Error("Access token not found");
+            }
+            if (ownerUUID) {
+                localStorage.setItem("ownerUUID", ownerUUID);
             }
 
-            setUser(userInfo);
-            localStorage.setItem("user", JSON.stringify(userInfo));
-            localStorage.setItem("Acces Token", token);
+            setUser(data);
+            localStorage.setItem("user", JSON.stringify(data));
+            localStorage.setItem("Acces Token", generateAccessToken);
+            localStorage.setItem("Refresh Token", generateRefreshToken);
             setIsLogged(true);
             return true;
         } catch (error) {
@@ -62,24 +67,40 @@ export const UserNormalProvider = ({ children }: { children: React.ReactNode }) 
     const logOut = () => {
         localStorage.removeItem("user");
         localStorage.removeItem("Acces Token");
+        localStorage.removeItem("Refresh Token");
+        localStorage.removeItem("ownerUUID");
         setUser(null);
         setIsLogged(false);
     };
 
-    useEffect(() => {
-        const token = localStorage.getItem("Acces Token");
-        setIsLogged(!!token);
-    }, [user]);
+    const sendEmail = async (emailData: ISendEmailData): Promise<boolean> => {
+        try {
+            const response = await postSendEmail(emailData);
+            return response; // Retorna true si el envío fue exitoso
+        } catch (error) {
+            console.error("Email sending failed:", error);
+            return false;
+        }
+    };
 
     useEffect(() => {
+        const token = localStorage.getItem("Acces Token");
         const storedUser = localStorage.getItem("user");
+
+        console.log("Token desde localStorage:", token); // Log para verificar el token
+        console.log("Usuario almacenado:", storedUser); // Log para verificar el usuario almacenado
+
         if (storedUser) {
-            setUser(JSON.parse(storedUser));
+            const parsedUser = JSON.parse(storedUser);
+            setUser(parsedUser); // Configura el estado de `user` si hay un usuario almacenado
+            setIsLogged(!!token);
+            console.log("Usuario establecido:", parsedUser); // Log para verificar el usuario establecido
         } else {
             setUser(null);
+            setIsLogged(false);
         }
-    }, []); // Solo se ejecuta al montar el componente
-    
+    }, []);
+
     return (
         <UserContext.Provider 
             value={{
@@ -91,6 +112,7 @@ export const UserNormalProvider = ({ children }: { children: React.ReactNode }) 
                 signUp,
                 signUpOwner,
                 logOut,
+                sendEmail,
             }}
         >
             {children}

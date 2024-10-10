@@ -36,7 +36,14 @@ interface IProfile{
 
 
 
- interface IUserContextType {
+interface ISendEmailData {
+  to: string;
+  subject: string;
+  message: string;
+}
+
+
+interface IUserContextType {
   user: Partial<IUser> | null;
   setUser: (user: Partial<IUser> | null) => void;
   isLogged: boolean;
@@ -45,6 +52,7 @@ interface IProfile{
   signUp: (user: Omit<IUser, "uuid">) => Promise<boolean>;
   signUpOwner: (uuid: string, ownerData: IRegisterOwner) => Promise<boolean>;
   logOut: () => void;
+  sendEmail: (emailData: ISendEmailData) => Promise<boolean>; // Actualiza aquí
 }
 
 
@@ -149,7 +157,7 @@ interface IReservation {
   state: IStateBooking;
   checkIn: Date;
   checkOut: Date;
-  user: IUser; 
+  user:Partial<IUser>; 
   room: IRoom; 
   order_detail: IOrderDetail;
 }
@@ -272,5 +280,9 @@ export type {
     IProfile,
     IOrderDetail,
     IRegisterOwner,
-    IPayload,
+
+    ISendEmailData,
+
+    IPayload
+
   }

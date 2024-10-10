@@ -1,15 +1,23 @@
-import PropertyDetail from '@/components/Property-detail';
-import { fetchPropertiesById } from '@/lib/server/fetchProperties';
+// src/app/detail/[uuid]/page.tsx
+import { IProperty } from "@/interfaces/Interfaces"; 
+import PropertyDetail from "@/components/Property-detail";
+import { fetchPropertiesById } from "@/lib/server/fetchProperties";
 
+const PropertyPage = async ({ params }: { params: { uuid: string } }) => {
+  const { uuid } = params; 
+  let property: IProperty | null = null;
 
-export default async function PropertyDetailPage({ params }: { params: { uuid: string } }) {
-  console.log('UUID:', params.uuid); // Agrega esta línea para verificar el UUID
-  const property = await fetchPropertiesById(params.uuid);
-  console.log('Property fetched:', property);
+  try {
+    property = await fetchPropertiesById(uuid);
+  } catch (error) {
+    console.error("Error fetching property:", error);
+  }
 
   return (
     <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
-      <PropertyDetail property={property} /> 
+      <PropertyDetail property={property} />
     </div>
-  )
-}
+  );
+};
+
+export default PropertyPage;
