@@ -3,7 +3,9 @@ import { IProperty } from "@/interfaces/Interfaces";
 // Obtener todas las propiedades
 export async function fetchProperties(): Promise<IProperty[]> {
   try {
-    const response = await fetch(`http://localhost:3001/properties`, {
+
+    const response = await fetch(`http://localhost:3000/properties`, {
+
       next: { revalidate: 3 },
     });
 
@@ -22,7 +24,9 @@ export async function fetchProperties(): Promise<IProperty[]> {
 // Obtener propiedad por ID (UUID)
 export async function fetchPropertiesById(uuid: string): Promise<IProperty> {
   try {
-    const response = await fetch(`http://localhost:3001/properties/${uuid}`);
+
+    const response = await fetch(`http://localhost:3000/properties/${uuid}`);
+
 
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`);
@@ -42,7 +46,9 @@ export const postProperties = async (cartItems: IProperty[]): Promise<IProperty[
     const products = cartItems.map((item) => item.uuid);
     const token = localStorage.getItem("token");
 
-    const response = await fetch("http://localhost:3001/properties/addProperty/:id", {
+
+    const response = await fetch("http://localhost:3000/properties/addProperty/:id", {
+
       method: "POST",
       headers: {
         Authorization: `${token}`,
@@ -61,4 +67,6 @@ export const postProperties = async (cartItems: IProperty[]): Promise<IProperty[
     console.error("Error al agregar propiedades:", error);
     throw error;
   }
+
 };
+
