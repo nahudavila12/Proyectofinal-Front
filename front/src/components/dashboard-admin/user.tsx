@@ -11,7 +11,7 @@ export default function UsersSection() {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const res = await fetch(`http://localhost:3000/admin/allUsers?page=${page}&limit=${limit}`);
+        const res = await fetch(`http://localhost:3001/admin/allUsers?page=${page}&limit=${limit}`);
         if (!res.ok) {
           throw new Error('Error al obtener los usuarios');
         }
@@ -29,7 +29,7 @@ export default function UsersSection() {
 
   const banUser = async (uuid: string) => {
     try {
-      const res = await fetch(`http://localhost:3000/admin/bannUser/${uuid}`, {
+      const res = await fetch(`http://localhost:3001/admin/bannUser/${uuid}`, {
         method: 'PUT', 
       });
       if (!res.ok) {
@@ -44,7 +44,7 @@ export default function UsersSection() {
 
   const deleteUser = async (uuid: string) => {
     try {
-      const res = await fetch(`http://localhost:3000/users/delete/${uuid}`, {
+      const res = await fetch(`http://localhost:3001/users/delete/${uuid}`, {
         method: 'DELETE', 
       });
       if (!res.ok) {

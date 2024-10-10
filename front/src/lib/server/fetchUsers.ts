@@ -68,4 +68,3 @@ export const postSignupOwner = async (uuid: string, ownerData: IRegisterOwner) =
   const data = await response.json();
   return data;
 };
-

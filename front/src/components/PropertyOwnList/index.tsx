@@ -4,10 +4,6 @@ import { useState } from 'react'
 import Image from 'next/image'
 import AccommodationForm, { IProperty } from '../PropertyForm';
 
-
-
-
-
 export default function PropertyOwnerList() {
   const [properties, setProperties] = useState<IProperty[]>([])
   const [editingProperty, setEditingProperty] = useState<IProperty | null>(null)

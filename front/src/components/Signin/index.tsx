@@ -19,11 +19,11 @@ import { Mail } from 'lucide-react';
 import GoogleSignInButton from '@/components/Auth0Google/GoogleSigIn'; // Asegúrate de que la ruta sea correcta
 import { UserContext } from '@/context/user'; // Asegúrate de que la ruta sea correcta
 import { IRol } from '@/interfaces/Interfaces';
-
+import { useRouter } from 'next/navigation';
 
 export default function InstaStayLogin() {
   const { signIn } = useContext(UserContext);
-  
+  const router = useRouter(); 
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -41,7 +41,7 @@ export default function InstaStayLogin() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     // Aquí iría la lógica de autenticación
     if (!formData.email || !formData.password) {
       setError('Por favor completa todos los campos.');
@@ -49,30 +49,28 @@ export default function InstaStayLogin() {
     }
 
     const success = await signIn(formData);
-    
+
     if (success) {
       // Lógica para determinar el rol
-      const userRole = determineUserRole(formData.email); // Cambia esto según tu lógica
+      const userRole = determineUserRole(formData.email);
 
       // Redirige según el rol
       if (userRole === IRol.Owner) {
-        // Redirigir a la página del owner
-        console.log("User is an Owner");
+        router.push("/owner-dashboard"); // Redirige al dashboard del owner
       } else if (userRole === IRol.Admin) {
-        // Redirigir a la página del admin
-        console.log("User is an Admin");
+        router.push("/admin-dashboard"); // Redirige al dashboard del admin
       } else {
-        // Redirigir a la página normal
-        console.log("User is a regular user");
+        router.push("/home"); // Redirige a la página normal
       }
     } else {
-      setError('Credenciales inválidas');
+      setError('Credenciales inválidas');  
     }
+
+
   };
 
   const determineUserRole = (email: string): IRol => {
-    // Aquí puedes implementar la lógica para determinar el rol del usuario
-    // Por ejemplo, podrías hacer una llamada a la API para obtener el rol
+    // Implementa la lógica para determinar el rol del usuario
     if (email.endsWith('@owner.com')) {
       return IRol.Owner;
     } else if (email.endsWith('@admin.com')) {
@@ -91,7 +89,6 @@ export default function InstaStayLogin() {
   return (
     <Box
       minH="100vh"
-      bgGradient="linear(to-br, blue.300, blue.300, cyan.400)"
       display="flex"
       alignItems="center"
       justifyContent="center"
@@ -107,7 +104,7 @@ export default function InstaStayLogin() {
         transition="transform 0.3s"
         _hover={{ transform: 'scale(1.05)' }}
       >
-        <Text fontSize="4xl" fontWeight="bold" textAlign="center" color="blue.600" mb={6}>InstaStay</Text>
+        <Text fontSize="4xl" fontWeight="bold" textAlign="center" color="#4D8DA1" mb={6}>InstaStay</Text>
         <Text mt={6} textAlign="center" fontSize="3xl" fontWeight="extrabold" color="gray.900">Iniciar Sesión</Text>
         <Progress value={calculateProgress()} size="sm" mt={4} />
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -175,8 +172,6 @@ export default function InstaStayLogin() {
         <Text textAlign="center" mt={4}>
           <Link color="blue.400" href="/auth-signup">¿No tienes una cuenta? Regístrate</Link>
         </Text>
-        
-        {/* Botón de inicio de sesión con Google */}
         <Text textAlign="center" mt={4}>O</Text>
         <GoogleSignInButton />
       </Box>
