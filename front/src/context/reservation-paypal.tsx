@@ -61,7 +61,7 @@ export const ReservationProvider: React.FC<{ children: ReactNode }> = ({ childre
     };
 
     const getReservations = async () => {
-        const userId = user?.user?.uuid; 
+        const userId = user?.uuid; 
 
         if (!userId) {
             setError("User ID is not available.");

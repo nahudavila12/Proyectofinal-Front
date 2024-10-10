@@ -2,17 +2,19 @@
 
 import { useState, useContext } from 'react';
 import { Button, Input, FormControl, FormLabel, Progress, Select, Box, Text, InputGroup, InputLeftElement } from '@chakra-ui/react';
-import { Mail, Lock, User, Calendar, Phone, MapPin, Flag } from 'lucide-react';
+import { Mail, Lock, User, Calendar, Phone, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { UserContext } from '@/context/user'; // Ajusta la ruta según la ubicación de tu contexto
+import { useRouter } from 'next/navigation';
 
 export default function InstaStayRegistro() {
-  const { signUp} = useContext(UserContext); // Usamos el contexto para registrar usuarios
+  const router = useRouter();
+  const { signUp, sendEmail } = useContext(UserContext); // Usamos el contexto para registrar usuarios y enviar correos
 
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    confirmPassword: '',
+    confirmPassword: '', // Asegúrate de tener este campo
     firstName: '',
     lastName: '',
     user_name: '',
@@ -38,25 +40,35 @@ export default function InstaStayRegistro() {
       setError('Las contraseñas no coinciden');
       return;
     }
-    
+
     const userData = {
-      user_name: formData.user_name,  // Cambia `username` a `user_name`
+      user_name: formData.user_name,
       email: formData.email,
       password: formData.password,
-      firstName: formData.firstName, // Asegúrate de que este campo sea necesario o remuévelo
-      lastName: formData.lastName,     // Lo mismo para este campo
-      birthday: formData.birthday,    // Cambia `birthDate` a `birthday`
+      confirmPassword: formData.confirmPassword,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      birthday: formData.birthday,
       phone: formData.phone,
       address: formData.address,
       country: formData.country
     };
-  
+
     try {
-      await signUp(userData); 
+      await signUp(userData); // Llamada para registrar al usuario
+
+      // Crea un objeto de datos para el envío de correo
+      const emailData = {
+        to: formData.email,
+        subject: 'Bienvenido a InstaStay',
+        message: 'Gracias por registrarte en InstaStay. ¡Estamos encantados de tenerte con nosotros!'
+      };
+
+      await sendEmail(emailData); // Llamada para enviar el correo
+      router.push("/auth-signin");
       setError('');
-      
-    } catch  {
-      setError('Error al registrar usuario'); // Maneja errores de registro
+    } catch {
+      setError('Error al registrar usuario o enviar correo'); // Maneja errores de registro o envío de correo
     }
   };
 
@@ -67,10 +79,10 @@ export default function InstaStayRegistro() {
   };
 
   return (
-    <Box className="min-h-screen bg-gradient-to-br from-sky-300 via-blue-300 to-cyan-400 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <Box className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <Box className="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-2xl transform transition-all hover:scale-105 duration-300">
         <Box>
-          <Text fontSize="4xl" fontWeight="bold" textAlign="center" color="sky.600" mb={6}>InstaStay</Text>
+          <Text fontSize="4xl" fontWeight="bold" textAlign="center" color="#4D8DA1" mb={6}>InstaStay</Text>
           <Text mt={6} textAlign="center" fontSize="3xl" fontWeight="extrabold" color="gray.900">
             Registro de Usuario
           </Text>
@@ -80,6 +92,7 @@ export default function InstaStayRegistro() {
         </Box>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <Box className="grid grid-cols-1 gap-6">
+            {/* Campos existentes */}
             <FormControl>
               <FormLabel htmlFor="email" srOnly>Correo Electrónico</FormLabel>
               <InputGroup>
@@ -116,6 +129,7 @@ export default function InstaStayRegistro() {
                 />
               </InputGroup>
             </FormControl>
+            {/* Campo de Confirmar Contraseña */}
             <FormControl>
               <FormLabel htmlFor="confirmPassword" srOnly>Confirmar Contraseña</FormLabel>
               <InputGroup>
@@ -243,40 +257,64 @@ export default function InstaStayRegistro() {
             <FormControl>
               <FormLabel htmlFor="country" srOnly>País</FormLabel>
               <InputGroup>
-                <Select
-                  id="country"
-                  name="country"
-                  required
-                  value={formData.country}
-                  onChange={handleChange}
-                >
-                  <option value="">Selecciona un país</option>
-                  <option value="ES">España</option>
-                  <option value="MX">México</option>
-                  <option value="AR">Argentina</option>
-                  <option value="CO">Colombia</option>
-                  <option value="PE">Perú</option>
-                </Select>
-                <InputLeftElement pointerEvents="none">
-                  <Flag className="text-gray-400" size={18} />
-                </InputLeftElement>
+              <Select
+  id="country"
+  name="country"
+  required
+  value={formData.country}
+  onChange={handleChange}
+>
+  <option value="">Selecciona un País</option>
+  <option value="AR">Argentina</option>
+  <option value="BO">Bolivia</option>
+  <option value="BR">Brasil</option>
+  <option value="CL">Chile</option>
+  <option value="CO">Colombia</option>
+  <option value="CR">Costa Rica</option>
+  <option value="CU">Cuba</option>
+  <option value="DO">República Dominicana</option>
+  <option value="EC">Ecuador</option>
+  <option value="SV">El Salvador</option>
+  <option value="GT">Guatemala</option>
+  <option value="HN">Honduras</option>
+  <option value="MX">México</option>
+  <option value="NI">Nicaragua</option>
+  <option value="PA">Panamá</option>
+  <option value="PY">Paraguay</option>
+  <option value="PE">Perú</option>
+  <option value="UY">Uruguay</option>
+  <option value="VE">Venezuela</option>
+  <option value="US">Estados Unidos</option>
+  <option value="ES">España</option>
+  <option value="FR">Francia</option>
+  <option value="IT">Italia</option>
+  <option value="GB">Reino Unido</option>
+  <option value="JP">Japón</option>
+  <option value="CN">China</option>
+  <option value="IN">India</option>
+  <option value="AU">Australia</option>
+  <option value="BR">Brasil</option>
+  <option value="ZA">Sudáfrica</option>
+</Select>
+
               </InputGroup>
             </FormControl>
           </Box>
-
-          {error && (
-            <Text color="red.500" fontSize="sm" mt={2} bg="red.100" borderWidth={1} borderColor="red.400" borderRadius="md" p={2}>
-              {error}
-            </Text>
-          )}
-
+          {error && <Text color="red.500">{error}</Text>}
           <Button
             type="submit"
-            className="w-full"
-            colorScheme="blue"
+            w="full"
+            colorScheme="teal"
+            size="lg"
           >
             Registrarse
           </Button>
+          <Text align="center">
+            ¿Ya tienes una cuenta?{' '}
+            <Link href="/auth-signin" className="text-teal-500">Inicia sesión</Link>
+          </Text>
         </form>
-        <Box textAlign="center" mt={4
-}> <Text fontSize="sm" color="gray.600"> ¿Ya tienes una cuenta?{' '} <Link href="/auth-signin" className="font-medium text-sky-600 hover:text-sky-500"> Inicia sesión </Link> </Text> </Box> </Box> </Box> ); }
+      </Box>
+    </Box>
+  );
+}
