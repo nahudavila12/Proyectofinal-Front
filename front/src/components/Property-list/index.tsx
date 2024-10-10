@@ -51,6 +51,7 @@ const PropertyList: React.FC<PropertyListProps> = ({ currentPage, totalPages, se
                   width={300}
                   height={200}
                   className="w-full h-48 object-cover"
+                  unoptimized // Esta propiedad desactiva el optimizado de imágenes de Next.js
                 />
               ) : (
                 <div className="w-full h-48 flex items-center justify-center bg-gray-200 text-gray-600">
@@ -62,7 +63,7 @@ const PropertyList: React.FC<PropertyListProps> = ({ currentPage, totalPages, se
                 <p className="text-gray-600 mb-2">{property.location}</p>
                 <p className="text-gray-600 mb-2">Tipo: {property.propertyType}</p>
                 <p className="text-gray-600">
-                  Desde $
+                  Desde $ 
                   {property.room && property.room.length > 0
                     ? Math.min(...property.room.map((room) => room.price_per_day))
                     : "Sin precio disponible"}
