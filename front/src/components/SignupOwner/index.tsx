@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useContext, useState } from 'react';
@@ -31,9 +32,11 @@ export default function RegisterOwnerForm() {
     return null;
   };
 
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setRegisterOwnerValues({ ...registerOwnerValues, [name]: value });
+
 
     const error = validateField(name as keyof IRegisterOwner, value);
     setErrors({ ...errors, [name]: error || '' });
@@ -183,3 +186,4 @@ async function updateUserRole(uuid: string, rol: string): Promise<boolean> {
     return false; 
   }
 }
+

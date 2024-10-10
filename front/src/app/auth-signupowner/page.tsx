@@ -1,3 +1,4 @@
+
 import { ChakraProvider } from '@chakra-ui/react'; // Importa ChakraProvider
 import SignupFormOwner from '@/components/SignupOwner';
 import React from 'react';

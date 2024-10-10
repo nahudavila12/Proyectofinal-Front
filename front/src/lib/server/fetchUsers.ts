@@ -3,7 +3,7 @@ import { ILogin, IRegisterOwner, IRegisterUser, ISendEmailData,  } from "../../i
 export const postSignup = async (user: IRegisterUser) => {
   console.log("Datos enviados en la solicitud:", user);
 
-  const response = await fetch("http://localhost:3000/auth/signup", {
+  const response = await fetch("http://localhost:3001/auth/signup", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -21,7 +21,9 @@ export const postSignup = async (user: IRegisterUser) => {
 };
 
 export const postSignin = async (credentials: ILogin) => {
+
   const response = await fetch("http://localhost:3000/auth/signin", {
+
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -39,7 +41,9 @@ export const postSignin = async (credentials: ILogin) => {
 };
 
 export const postSignupOwner = async (uuid: string, ownerData: IRegisterOwner) => {
+
   const url = `http://localhost:3000/owners/addOwner/${uuid}`;
+
 
   const response = await fetch(url, {
     method: "POST",

@@ -3,6 +3,7 @@ import { NavbarContext } from '@/context/navbar';
 import { UserContext } from '@/context/user';
 import Image from 'next/image';
 import Link from 'next/link';
+
 import React, { useContext, useEffect } from 'react';
 import { useState } from 'react';
 import ProfileClient from '../Auth0Google/Profile';
@@ -12,7 +13,9 @@ export default function NavbarComponent() {
   const { isDropdownOpen, toggleDropdown, closeDropdown } = useContext(NavbarContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isLogged, logOut } = useContext(UserContext);
+
   const [userName, setUserName] = useState('');
+
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -22,6 +25,7 @@ export default function NavbarComponent() {
   };
 
   const { user } = useUser();
+
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -121,12 +125,12 @@ export default function NavbarComponent() {
             </li>
           </ul>
         </div>
-        
         {/* Área de usuario */}
         <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse relative">
 
           {/* ProfileClient */}
           <ProfileClient />
+
           {/* Nombre de usuario */}
           <div className='m-4'>
           {userName && (

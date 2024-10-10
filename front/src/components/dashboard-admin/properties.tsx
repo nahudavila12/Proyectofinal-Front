@@ -9,7 +9,7 @@ export default function PropertiesSection() {
   useEffect(() => {
     async function fetchProperties() {
       try {
-        const res = await fetch('http://localhost:3000/properties');
+        const res = await fetch('http://localhost:3001/properties');
         if (!res.ok) {
           throw new Error('Error al obtener las propiedades');
         }
@@ -33,7 +33,7 @@ export default function PropertiesSection() {
     // Ejemplo de llamada al backend para editar
     const updatedProperty = { /* Propiedad actualizada */ };
     try {
-      const res = await fetch(`http://localhost:3000/owner/propertie/update/${uuid}`, {
+      const res = await fetch(`http://localhost:3001/owner/propertie/update/${uuid}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ export default function PropertiesSection() {
 
   async function banProperty(uuid: string) {
     try {
-      const res = await fetch(`http://localhost:3000/admin/propertie/ban/${uuid}`, {
+      const res = await fetch(`http://localhost:3001/admin/propertie/ban/${uuid}`, {
         method: 'PATCH',
       });
 
@@ -78,7 +78,7 @@ export default function PropertiesSection() {
 
   async function deleteProperty(uuid: string) {
     try {
-      const res = await fetch(`http://localhost:3000/owner/propertie/delete/${uuid}`, {
+      const res = await fetch(`http://localhost:3001/owner/propertie/delete/${uuid}`, {
         method: 'DELETE',
       });
 

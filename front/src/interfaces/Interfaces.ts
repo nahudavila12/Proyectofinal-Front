@@ -251,7 +251,14 @@ interface IHotelFormProps {
   initialData?: IHotelData
 }
 
-
+interface IPayload {
+  uuid: string;
+  user_name: string;
+  email: string;
+  ownerUuid: string;
+  rol: string;
+  exp: number; // Tiempo de expiración del token
+}
 
 
 export type {
@@ -273,5 +280,9 @@ export type {
     IProfile,
     IOrderDetail,
     IRegisterOwner,
-    ISendEmailData
+
+    ISendEmailData,
+
+    IPayload
+
   }
